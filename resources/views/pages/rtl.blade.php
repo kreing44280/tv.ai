@@ -10,7 +10,7 @@
                 aria-hidden="true" id="iconSidenav"></i>
             <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
                 target="_blank">
-                <img src="/img/logo-ct-dark.png" class="navbar-brand-img h-100" alt="main_logo">
+                <img src="{{ asset('img/logo-ct-dark.png') }}" class="navbar-brand-img h-100" alt="main_logo">
                 <span class="me-1 font-weight-bold">Argon Dashboard 2</span>
             </a>
         </div>
@@ -182,7 +182,7 @@
                                     <a class="dropdown-item border-radius-md" href="javascript:;">
                                         <div class="d-flex py-1">
                                             <div class="my-auto">
-                                                <img src="/img/small-logos/logo-spotify.svg"
+                                                <img src="/img/small-logos/logo-spotify.svg" class="avatar avatar-sm  ms-3 "
                                                     class="avatar avatar-sm bg-gradient-dark  ms-3 ">
                                             </div>
                                             <div class="d-flex flex-column justify-content-center">
@@ -771,7 +771,7 @@
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <div>
-                                                        <img src="/img/small-logos/logo-spotify.svg"
+                                                        <img src="{{ asset('img/small-logos/logo-spotify.svg') }}"
                                                             class="avatar avatar-sm ms-3">
                                                     </div>
                                                     <div class="d-flex flex-column justify-content-center">

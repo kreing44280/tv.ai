@@ -39,6 +39,12 @@ Route::middleware(['auth'])->group(function () {
     })->name('sign-up-static');
     Route::get('/profile.update', function() {
         //
-    })->name('profile.update');
+    })->name('profile.update'); 
+    Route::get('/pages/tables', function() {
+        return view('pages.tables');
+    })->name('pages.tables'); 
+    Route::get('/tables', function() {
+        //
+    })->name('tables'); 
 });
 
