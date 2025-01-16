@@ -1,0 +1,44 @@
+<?php
+
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\Video\VideoController;
+use Illuminate\Support\Facades\Route;
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/', [LoginController::class, 'index'])->name('login');
+Route::POST('/login-perform', [LoginController::class, 'store'])->name('login.perform');
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
+Route::POST('/register-perform', [RegisterController::class, 'store'])->name('register.perform');
+Route::POST('/logout', [LoginController::class, 'destroy'])->name('logout');
+Route::get('/video/{filename}', [VideoController::class, 'stream'])->name('video.stream');
+Route::get('/video', [VideoController::class, 'index']);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [UserController::class, 'index'])->name('profile');
+    Route::get('/page', function() {
+        //
+    })->name('page');
+    Route::get('/virtual-reality', function() {
+        //
+    })->name('virtual-reality');
+    Route::get('/rtl', function() {
+        //
+    })->name('rtl');
+    Route::get('/profile-static', function() {
+        //
+    })->name('profile-static');
+    Route::get('/sign-in-static', function() {
+        //
+    })->name('sign-in-static');
+    Route::get('/sign-up-static', function() {
+        //
+    })->name('sign-up-static');
+    Route::get('/profile.update', function() {
+        //
+    })->name('profile.update');
+});
+

@@ -1,0 +1,100 @@
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/public/images
+/public/img
+/storage/*.key
+/storage/public/videos
+/vendor
+/public/assets/img
+/public/images
+.env
+.env.backup
+.env.production
+.env.testing
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+/.devcontainer
+/_ide_helper.php
+/_ide_helper_models.php
+/_ide_helper_*.php
+phpunit.xml.bak
+*Zone.Identifier
+ray.php
+
+*.mp3
+*.mp4
+
+# JPEG
+*.jpg
+*.jpeg
+*.jpe
+*.jif
+*.jfif
+*.jfi
+
+# JPEG 2000
+*.jp2
+*.j2k
+*.jpf
+*.jpx
+*.jpm
+*.mj2
+
+# JPEG XR
+*.jxr
+*.hdp
+*.wdp
+
+# Graphics Interchange Format
+*.gif
+
+# RAW
+*.raw
+
+# Web P
+*.webp
+
+# Portable Network Graphics
+*.png
+
+# Animated Portable Network Graphics
+*.apng
+
+# Multiple-image Network Graphics
+*.mng
+
+# Tagged Image File Format
+*.tiff
+*.tif
+
+# Scalable Vector Graphics
+*.svg
+*.svgz
+
+# Portable Document Format
+*.pdf
+
+# X BitMap
+*.xbm
+
+# BMP
+*.bmp
+*.dib
+
+# ICO
+*.ico
+
+# 3D Images
+*.3dm
+*.max
+htdocs - Shortcut.lnk
