@@ -14,8 +14,6 @@ Route::POST('/login-perform', [LoginController::class, 'store'])->name('login.pe
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::POST('/register-perform', [RegisterController::class, 'store'])->name('register.perform');
 Route::POST('/logout', [LoginController::class, 'destroy'])->name('logout');
-Route::get('/video/{filename}', [VideoController::class, 'stream'])->name('video.stream');
-Route::get('/video', [VideoController::class, 'index']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'index'])->name('profile');
@@ -46,5 +44,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tables', function() {
         //
     })->name('tables'); 
+    Route::get('/video-list', [VideoController::class, 'index'])->name('video-list'); 
+    Route::get('/video-detail/{id}', [VideoController::class, 'show'])->name('video-detail'); 
+    Route::get('/video/{filename}', [VideoController::class, 'stream'])->name('video.stream');
 });
 

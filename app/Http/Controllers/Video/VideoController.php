@@ -3,14 +3,33 @@
 namespace App\Http\Controllers\Video;
 
 use App\Http\Controllers\Controller;
+use App\Models\FootageNews;
 use Illuminate\Http\Request;
+
+use function Psy\debug;
 
 class VideoController extends Controller
 {
 
     public function index()
     {
-        return view('pages.video');
+        $videos = FootageNews::select(
+            'id',
+            'raw_file_name',
+            'folder_name',
+            'mp3_name',
+            'mp4_name',
+            'status_mp3_convert',
+            'status_transcript',
+            'created_at'
+        )->orderBy('created_at', 'desc')->paginate(10);      
+        return view('pages.video-list', compact('videos'));
+    }
+
+    public function show($id)    
+    {
+        $video = FootageNews::find($id);                
+        return view('pages.video-detail', compact('video'));
     }
 
     public function stream($filename)
