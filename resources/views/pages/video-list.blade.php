@@ -47,21 +47,21 @@
                                     </td>
                                     <td>
                                         <div class="d-flex px-2 py-1">
-                                            <a href="#" class="text-sm font-semibold mb-0 cursor-pointer text-info
+                                            <a href="{{ route('video-detail', ['id' => $video->id]) }}" class="text-sm font-semibold mb-0 cursor-pointer text-info
                                                 text-decoration-underline">{{ $video->raw_file_name }}</a>
                                         </div>
                                     </td>
                                     <td>
-                                        <p class="text-sm font-semibold mb-0 cursor-pointer text-info
-                                                text-decoration-underline">{{ $video->folder_name }}</p>
+                                        <a href="{{ route('video-detail', ['id' => $video->id]) }}" class="text-sm font-semibold mb-0 cursor-pointer text-info
+                                                text-decoration-underline">{{ $video->folder_name }}</a>
                                     </td>
                                     <td>
-                                        <p class="text-sm font-semibold mb-0 cursor-pointer text-info
-                                                text-decoration-underline">{{ $video->mp3_name }}</p>
+                                        <a href="{{ route('video-detail', ['id' => $video->id]) }}" class="text-sm font-semibold mb-0 cursor-pointer text-info
+                                                text-decoration-underline">{{ $video->mp3_name }}</a>
                                     </td>
                                     <td>
-                                        <p class="text-sm font-semibold mb-0 cursor-pointer text-info
-                                                text-decoration-underline">{{ $video->mp4_name }}</p>
+                                        <a href="{{ route('video-detail', ['id' => $video->id]) }}" class="text-sm font-semibold mb-0 cursor-pointer text-info
+                                                text-decoration-underline">{{ $video->mp4_name }}</a>
                                     </td>
                                     <td class="align-middle text-center">
                                         <p class="text-sm font-semibold mb-0 badge 

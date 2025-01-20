@@ -8,48 +8,57 @@
         <div class="col-12">
             <div class="card mb-4">
                 <div class="card-header pb-0">
-                    <button type="button" class="btn btn-primary" onclick="history.back()">back</button>
+                    <button type="button" class="btn btn-secondary" onclick="history.back()">back</button>
                 </div>
                 <div class="card-body">
                     <div class="embed-responsive embed-responsive-16by9">
-                        <form action="">
+                        <form action="{{ route('video.update', ['id' => $video['id']]) }}" method="POST">
+                            @csrf
                             <div class="form-group mb-3">
                                 <label for="file_name" class="form-control-label font-weight-bold text-uppercase">File Name</label>
                                 <input type="text" name="file_name" id="file_name" value="{{ $video['raw_file_name'] }}"
-                                    class="form-control form-control-alternative">
+                                    class="form-control form-control-alternative" disabled>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="folder_name" class="form-control-label font-weight-bold text-uppercase">Folder Name</label>
-                                <input type="text" name="folder_name" id="folder_name" value="{{ $video['folder_name'] }}" class="form-control form-control-alternative" />
+                                <input type="text" name="folder_name" id="folder_name" value="{{ $video['folder_name'] }}" class="form-control form-control-alternative" disabled />
                             </div>
                             <div class="form-group mb-3">
                                 <label for="mp3_name" class="form-control-label font-weight-bold text-uppercase">MP3 Name</label>
-                                <input type="text" name="mp3_name" id="mp3_name" value="{{ $video['mp3_name'] }}" class="form-control form-control-alternative" />
+                                <input type="text" name="mp3_name" id="mp3_name" value="{{ $video['mp3_name'] }}" class="form-control form-control-alternative" disabled />
                             </div>
+                            @if ($video['mp3_name'] != null)
                             <div class="form-group mb-3">
                                 <video controls width="640" height="360">
                                     <source src="{{ route('video.stream', ['filename' => '' . $video['mp3_name'] . '']) }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             </div>
+                            @else
+                            <p class="text-danger text-xs pt-1">Cannot find MP3 file</p>
+                            @endif
                             <div class="form-group mb-3">
                                 <label for="mp4_name" class="form-control-label font-weight-bold text-uppercase">MP4 Name</label>
-                                <input type="text" name="mp4_name" id="mp4_name" value="{{ $video['mp4_name'] }}" class="form-control form-control-alternative" />
+                                <input type="text" name="mp4_name" id="mp4_name" value="{{ $video['mp4_name'] }}" class="form-control form-control-alternative" disabled />
                             </div>
+                            @if ($video['mp4_name'] != null)
                             <div class="form-group mb-3">
                                 <video controls width="640" height="360">
                                     <source src="{{ route('video.stream', ['filename' => '' . $video['mp4_name'] . '']) }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             </div>
+                            @else
+                            <p class="text-danger text-xs pt-1">Cannot find MP4 file</p>
+                            @endif
                             <div class="form-group mb-3">
                                 <label for="mp3_convert_os" class="form-control-label font-weight-bold text-uppercase">MP3 Convert OS</label>
-                                <input type="text" name="mp3_convert_os" id="mp3_convert_os" value="{{ $video['mp3_convert_os'] }}" class="form-control form-control-alternative" />
+                                <input type="text" name="mp3_convert_os" id="mp3_convert_os" value="{{ $video['mp3_convert_os'] }}" class="form-control form-control-alternative" disabled />
                             </div>
                             <div class="form-group mb-3">
                                 <label for="transcript" class="form-control-label font-weight-bold text-uppercase">Transcript</label>
                                 <textarea name="transcript" id="transcript" class="form-control form-control-alternative"
-                                    cols="30" rows="10">{{ $video['transcript'] }}</textarea>
+                                    cols="30" rows="10" disabled>{{ $video['transcript'] }}</textarea>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="news_title" class="form-control-label font-weight-bold text-uppercase">News Title</label>
@@ -60,19 +69,23 @@
                                 <textarea name="news_desc" id="news_desc" class="form-control form-control-alternative" cols="30" rows="10">
                                 {{ $video['news_desc'] }}
                                 </textarea>
-                            </div>
+                            </div>                        
                             <div class="form-group mb-3">
-                                <label for="news_tag" class="form-control-label font-weight-bold text-uppercase">News Tag</label>
-                                <input type="text" name="news_tag" id="news_tag" value="{{ $video['news_tag'] }}" class="form-control form-control-alternative" />
+                                <label for="news_tag" class="form-control-label font-weight-bold text-uppercase">News Tags</label>
+                                <div class="tag-input" id="tagInput">
+                                    <!-- Existing tags will be handled via JavaScript -->
+                                    <input type="text" id="tagInputField" class="form-control form-control-alternative" placeholder="Add a tag..." />
+                                </div>
+                                <!-- Hidden field to store tags -->
+                                <input type="hidden" name="news_tag" id="news_tag" value="{{ $video['news_tag'] }}" />
                             </div>
                             <div class="form-group mb-3">
                                 <label for="news_timestamp" class="form-control-label font-weight-bold text-uppercase">News Timestamp</label>
-                                <input type="text" name="news_timestamp" id="news_timestamp" value="{{ $video['news_timestamp'] }}" class="form-control form-control-alternative" />
+                                <textarea name="news_timestamp" id="news_timestamp" class="form-control form-control-alternative" cols="30" rows="10">{{ $video['news_timestamp'] }}</textarea>
                             </div>
-
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary mt-4">Save</button>
-                                <button type="reset" class="btn btn-secondary mt-4">Reset</button>
+                                <button type="button" class="btn btn-secondary mt-4" onclick="history.back()">back</button>
                             </div>
                         </form>
                     </div>
@@ -81,6 +94,6 @@
         </div>
     </div>
 
-    @include('layouts.footers.auth.footer')
+    @include('layouts.footers.auth.footer')  
 </div>
 @endsection

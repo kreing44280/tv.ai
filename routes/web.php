@@ -45,7 +45,8 @@ Route::middleware(['auth'])->group(function () {
         //
     })->name('tables'); 
     Route::get('/video-list', [VideoController::class, 'index'])->name('video-list'); 
-    Route::get('/video-detail/{id}', [VideoController::class, 'show'])->name('video-detail'); 
+    Route::get('/video/{id}/detail', [VideoController::class, 'show'])->name('video-detail'); 
     Route::get('/video/{filename}', [VideoController::class, 'stream'])->name('video.stream');
+    Route::post('/video/{id}/update', [VideoController::class, 'update'])->name('video.update');
 });
 
