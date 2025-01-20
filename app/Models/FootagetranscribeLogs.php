@@ -11,7 +11,7 @@ class FootagetranscribeLogs extends Model
      /** @use HasFactory<\Database\Factories\UserFactory> */
      use HasFactory, Notifiable;
 
-     protected $table = 'footagetranscribe_logs';
+     protected $table = 'footage_transcribe_logs';
 
      protected $fillable = [
         'footage_news_id',

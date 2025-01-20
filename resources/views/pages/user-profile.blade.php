@@ -32,13 +32,7 @@
     <div class="row">
         <div class="card">
             <form role="form" method="POST" action={{ route('profile.update') }} enctype="multipart/form-data">
-                @csrf
-                <div class="card-header pb-0">
-                    <div class="d-flex align-items-center">
-                        <p class="mb-0">Edit Profile</p>
-                        <button type="submit" class="btn btn-primary btn-sm ms-auto">Save</button>
-                    </div>
-                </div>
+                @csrf               
                 <div class="card-body">
                     <p class="text-uppercase text-sm">User Information</p>
                     <div class="row">

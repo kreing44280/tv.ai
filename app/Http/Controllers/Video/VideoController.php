@@ -56,6 +56,8 @@ class VideoController extends Controller
         $data = request()->all();
         if (isset($data['news_tag'])) {
             $data['news_tag'] = str_replace('×', '', $data['news_tag']);
+        }elseif(isset($data['news_tag_human'])){
+            $data['news_tag_human'] = str_replace('×', '', $data['news_tag_human']);
         }
 
         $video = FootageNews::find($id);
@@ -64,6 +66,10 @@ class VideoController extends Controller
             FootageNews::NEWS_DESC => $data['news_desc'] ?? $video->news_desc,
             FootageNews::NEWS_TAG => $data['news_tag'] ?? $video->news_tag,
             FootageNews::NEWS_TIMESTAMP => $data['news_timestamp'] ?? $video->news_timestamp,
+            FootageNews::NEWS_TITLE_HUMAN => $data['news_title_human'] ?? $video->news_title,
+            FootageNews::NEWS_DESC_HUMAN => $data['news_desc_human'] ?? $video->news_desc,
+            FootageNews::NEWS_TAG_HUMAN => $data['news_tag_human'] ?? $video->news_tag,
+            FootageNews::NEWS_TIMESTAMP_HUMAN => $data['news_timestamp_human'] ?? $video->news_timestamp,
         ]);
         return redirect()->route('video-detail', ['id' => $id]);
     }

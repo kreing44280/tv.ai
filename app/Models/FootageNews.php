@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
+
 class FootageNews extends Model
 {
       /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -36,6 +37,7 @@ class FootageNews extends Model
             'updated_at',
       ];
 
+      const ID = 'id';
       const RAW_FILE_NAME = 'raw_file_name';
       const FOLDER_NAME = 'folder_name';
       const MP3_NAME = 'mp3_name';
@@ -77,4 +79,8 @@ class FootageNews extends Model
             self::CREATED_AT => 'datetime',
             self::UPDATED_AT => 'datetime',
       ];
+
+      public function footageTranscribe() {
+            return $this->belongsTo(FootagetranscribeLogs::class, self::ID);
+      }
 }
