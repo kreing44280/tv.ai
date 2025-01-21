@@ -79,83 +79,86 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="news_title" class="form-control-label font-weight-bold text-uppercase">News
-                                        Title <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="red" class="bi bi-android2" viewBox="0 0 16 16">
+                                        Title
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green"
+                                            class="bi bi-android2 mb-1" viewBox="0 0 16 16">
                                             <path
                                                 d="m10.213 1.471.691-1.26q.069-.124-.048-.192-.128-.057-.195.058l-.7 1.27A4.8 4.8 0 0 0 8.005.941q-1.032 0-1.956.404l-.7-1.27Q5.281-.037 5.154.02q-.117.069-.049.193l.691 1.259a4.25 4.25 0 0 0-1.673 1.476A3.7 3.7 0 0 0 3.5 5.02h9q0-1.125-.623-2.072a4.27 4.27 0 0 0-1.664-1.476ZM6.22 3.303a.37.37 0 0 1-.267.11.35.35 0 0 1-.263-.11.37.37 0 0 1-.107-.264.37.37 0 0 1 .107-.265.35.35 0 0 1 .263-.11q.155 0 .267.11a.36.36 0 0 1 .112.265.36.36 0 0 1-.112.264m4.101 0a.35.35 0 0 1-.262.11.37.37 0 0 1-.268-.11.36.36 0 0 1-.112-.264q0-.154.112-.265a.37.37 0 0 1 .268-.11q.155 0 .262.11a.37.37 0 0 1 .107.265q0 .153-.107.264M3.5 11.77q0 .441.311.75.311.306.76.307h.758l.01 2.182q0 .414.292.703a.96.96 0 0 0 .7.288.97.97 0 0 0 .71-.288.95.95 0 0 0 .292-.703v-2.182h1.343v2.182q0 .414.292.703a.97.97 0 0 0 .71.288.97.97 0 0 0 .71-.288.95.95 0 0 0 .292-.703v-2.182h.76q.436 0 .749-.308.31-.307.311-.75V5.365h-9zm10.495-6.587a.98.98 0 0 0-.702.278.9.9 0 0 0-.293.685v4.063q0 .406.293.69a.97.97 0 0 0 .702.284q.42 0 .712-.284a.92.92 0 0 0 .293-.69V6.146a.9.9 0 0 0-.293-.685 1 1 0 0 0-.712-.278m-12.702.283a1 1 0 0 1 .712-.283q.41 0 .702.283a.9.9 0 0 1 .293.68v4.063a.93.93 0 0 1-.288.69.97.97 0 0 1-.707.284 1 1 0 0 1-.712-.284.92.92 0 0 1-.293-.69V6.146q0-.396.293-.68" />
-                                        </svg> (AI)</label>
+                                        </svg>
+                                    </label>
                                     <input type="text" name="news_title" id="news_title"
                                         value="{{ $video['news_title'] }}" class="form-control form-control-alternative"
-                                        @if ($video['news_title_human']) disabled @endif />
+                                        @if ($video['news_title']) disabled @endif />
                                 </div>
-                                @if ($video['news_title_human'])
+                                @if ($video['news_title'])
                                     <div class="form-group mb-3">
                                         <label for="news_title_human"
                                             class="form-control-label font-weight-bold text-uppercase">News Title
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="green" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                fill="currentColor" class="bi bi-person-circle mb-1" viewBox="0 0 16 16">
                                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                                                 <path fill-rule="evenodd"
                                                     d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                            </svg> (Human)</label>
+                                            </svg></label>
                                         <input type="text" name="news_title_human" id="news_title_human"
-                                            value="{{ $video['news_title_human'] }}"
+                                            value="{{ $video['news_title_human'] ?? $video['news_title'] }}"
                                             class="form-control form-control-alternative" />
                                     </div>
                                 @endif
                                 <div class="form-group mb-3">
                                     <label for="news_desc" class="form-control-label font-weight-bold text-uppercase">News
                                         Description <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="red" class="bi bi-android2" viewBox="0 0 16 16">
+                                            fill="green" class="bi bi-android2 mb-1" viewBox="0 0 16 16">
                                             <path
                                                 d="m10.213 1.471.691-1.26q.069-.124-.048-.192-.128-.057-.195.058l-.7 1.27A4.8 4.8 0 0 0 8.005.941q-1.032 0-1.956.404l-.7-1.27Q5.281-.037 5.154.02q-.117.069-.049.193l.691 1.259a4.25 4.25 0 0 0-1.673 1.476A3.7 3.7 0 0 0 3.5 5.02h9q0-1.125-.623-2.072a4.27 4.27 0 0 0-1.664-1.476ZM6.22 3.303a.37.37 0 0 1-.267.11.35.35 0 0 1-.263-.11.37.37 0 0 1-.107-.264.37.37 0 0 1 .107-.265.35.35 0 0 1 .263-.11q.155 0 .267.11a.36.36 0 0 1 .112.265.36.36 0 0 1-.112.264m4.101 0a.35.35 0 0 1-.262.11.37.37 0 0 1-.268-.11.36.36 0 0 1-.112-.264q0-.154.112-.265a.37.37 0 0 1 .268-.11q.155 0 .262.11a.37.37 0 0 1 .107.265q0 .153-.107.264M3.5 11.77q0 .441.311.75.311.306.76.307h.758l.01 2.182q0 .414.292.703a.96.96 0 0 0 .7.288.97.97 0 0 0 .71-.288.95.95 0 0 0 .292-.703v-2.182h1.343v2.182q0 .414.292.703a.97.97 0 0 0 .71.288.97.97 0 0 0 .71-.288.95.95 0 0 0 .292-.703v-2.182h.76q.436 0 .749-.308.31-.307.311-.75V5.365h-9zm10.495-6.587a.98.98 0 0 0-.702.278.9.9 0 0 0-.293.685v4.063q0 .406.293.69a.97.97 0 0 0 .702.284q.42 0 .712-.284a.92.92 0 0 0 .293-.69V6.146a.9.9 0 0 0-.293-.685 1 1 0 0 0-.712-.278m-12.702.283a1 1 0 0 1 .712-.283q.41 0 .702.283a.9.9 0 0 1 .293.68v4.063a.93.93 0 0 1-.288.69.97.97 0 0 1-.707.284 1 1 0 0 1-.712-.284.92.92 0 0 1-.293-.69V6.146q0-.396.293-.68" />
-                                        </svg> (AI)</label>
+                                        </svg></label>
                                     <textarea name="news_desc" id="news_desc" class="form-control form-control-alternative" cols="30"
-                                        rows="10" @if ($video['news_desc_human']) disabled @endif>
+                                        rows="10" @if ($video['news_desc']) disabled @endif>
                                 {{ $video['news_desc'] }}
                                 </textarea>
                                 </div>
-                                @if ($video['news_desc_human'])
+                                @if ($video['news_desc'])
                                     <div class="form-group mb-3">
                                         <label for="news_desc_human"
                                             class="form-control-label font-weight-bold text-uppercase">News Description
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="green" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                fill="currentColor" class="bi bi-person-circle mb-1" viewBox="0 0 16 16">
                                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                                                 <path fill-rule="evenodd"
                                                     d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                            </svg> (Human)</label>
+                                            </svg></label>
                                         <textarea name="news_desc_human" id="news_desc_human" class="form-control form-control-alternative" cols="30"
                                             rows="10">
-                                {{ $video['news_desc_human'] }}
+                                {{ $video['news_desc_human'] ?? $video['news_desc'] }}
                                 </textarea>
                                     </div>
                                 @endif
                                 <div class="form-group mb-3">
                                     <label for="news_tag" class="form-control-label font-weight-bold text-uppercase">News
                                         Tags <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="red" class="bi bi-android2" viewBox="0 0 16 16">
+                                            fill="green" class="bi bi-android2 mb-1" viewBox="0 0 16 16">
                                             <path
                                                 d="m10.213 1.471.691-1.26q.069-.124-.048-.192-.128-.057-.195.058l-.7 1.27A4.8 4.8 0 0 0 8.005.941q-1.032 0-1.956.404l-.7-1.27Q5.281-.037 5.154.02q-.117.069-.049.193l.691 1.259a4.25 4.25 0 0 0-1.673 1.476A3.7 3.7 0 0 0 3.5 5.02h9q0-1.125-.623-2.072a4.27 4.27 0 0 0-1.664-1.476ZM6.22 3.303a.37.37 0 0 1-.267.11.35.35 0 0 1-.263-.11.37.37 0 0 1-.107-.264.37.37 0 0 1 .107-.265.35.35 0 0 1 .263-.11q.155 0 .267.11a.36.36 0 0 1 .112.265.36.36 0 0 1-.112.264m4.101 0a.35.35 0 0 1-.262.11.37.37 0 0 1-.268-.11.36.36 0 0 1-.112-.264q0-.154.112-.265a.37.37 0 0 1 .268-.11q.155 0 .262.11a.37.37 0 0 1 .107.265q0 .153-.107.264M3.5 11.77q0 .441.311.75.311.306.76.307h.758l.01 2.182q0 .414.292.703a.96.96 0 0 0 .7.288.97.97 0 0 0 .71-.288.95.95 0 0 0 .292-.703v-2.182h1.343v2.182q0 .414.292.703a.97.97 0 0 0 .71.288.97.97 0 0 0 .71-.288.95.95 0 0 0 .292-.703v-2.182h.76q.436 0 .749-.308.31-.307.311-.75V5.365h-9zm10.495-6.587a.98.98 0 0 0-.702.278.9.9 0 0 0-.293.685v4.063q0 .406.293.69a.97.97 0 0 0 .702.284q.42 0 .712-.284a.92.92 0 0 0 .293-.69V6.146a.9.9 0 0 0-.293-.685 1 1 0 0 0-.712-.278m-12.702.283a1 1 0 0 1 .712-.283q.41 0 .702.283a.9.9 0 0 1 .293.68v4.063a.93.93 0 0 1-.288.69.97.97 0 0 1-.707.284 1 1 0 0 1-.712-.284.92.92 0 0 1-.293-.69V6.146q0-.396.293-.68" />
-                                        </svg> (AI)</label>
+                                        </svg></label>
                                     <div class="tag-input" style="" id="tagInput">
                                         <input type="text" id="tagInputField"
                                             class="form-control form-control-alternative" placeholder="Add a tag..."
-                                            @if ($video['news_tag_human']) disabled @endif />
+                                            @if ($video['news_tag']) disabled @endif />
                                     </div>
                                     <input type="hidden" name="news_tag" id="news_tag"
-                                        value="{{ $video['news_tag'] }}" @if ($video['news_tag_human']) disabled @endif />
+                                        value="{{ $video['news_tag'] }}"
+                                        @if ($video['news_tag']) disabled @endif />
                                 </div>
-                                @if ($video['news_tag_human'])
+                                @if ($video['news_tag'])
                                     <div class="form-group mb-3">
                                         <label for="news_tag_human"
                                             class="form-control-label font-weight-bold text-uppercase">News Tags
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="green" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                fill="currentColor" class="bi bi-person-circle mb-1" viewBox="0 0 16 16">
                                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                                                 <path fill-rule="evenodd"
                                                     d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                            </svg> (Human)                                            
+                                            </svg>
                                         </label>
                                         <div class="tag-input" id="tagInputHuman">
                                             <input type="text" id="tagInputFieldHuman"
@@ -163,32 +166,32 @@
                                                 placeholder="Add a tag..." />
                                         </div>
                                         <input type="hidden" name="news_tag_human" id="news_tag_human"
-                                            value="{{ $video['news_tag_human'] }}" />
+                                            value="{{ $video['news_tag_human'] ?? $video['news_tag'] }}" />
                                     </div>
                                 @endif
                                 <div class="form-group mb-3">
                                     <label for="news_timestamp"
                                         class="form-control-label font-weight-bold text-uppercase">News Timestamp <svg
                                             xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="red" class="bi bi-android2" viewBox="0 0 16 16">
+                                            fill="green" class="bi bi-android2 mb-1" viewBox="0 0 16 16">
                                             <path
                                                 d="m10.213 1.471.691-1.26q.069-.124-.048-.192-.128-.057-.195.058l-.7 1.27A4.8 4.8 0 0 0 8.005.941q-1.032 0-1.956.404l-.7-1.27Q5.281-.037 5.154.02q-.117.069-.049.193l.691 1.259a4.25 4.25 0 0 0-1.673 1.476A3.7 3.7 0 0 0 3.5 5.02h9q0-1.125-.623-2.072a4.27 4.27 0 0 0-1.664-1.476ZM6.22 3.303a.37.37 0 0 1-.267.11.35.35 0 0 1-.263-.11.37.37 0 0 1-.107-.264.37.37 0 0 1 .107-.265.35.35 0 0 1 .263-.11q.155 0 .267.11a.36.36 0 0 1 .112.265.36.36 0 0 1-.112.264m4.101 0a.35.35 0 0 1-.262.11.37.37 0 0 1-.268-.11.36.36 0 0 1-.112-.264q0-.154.112-.265a.37.37 0 0 1 .268-.11q.155 0 .262.11a.37.37 0 0 1 .107.265q0 .153-.107.264M3.5 11.77q0 .441.311.75.311.306.76.307h.758l.01 2.182q0 .414.292.703a.96.96 0 0 0 .7.288.97.97 0 0 0 .71-.288.95.95 0 0 0 .292-.703v-2.182h1.343v2.182q0 .414.292.703a.97.97 0 0 0 .71.288.97.97 0 0 0 .71-.288.95.95 0 0 0 .292-.703v-2.182h.76q.436 0 .749-.308.31-.307.311-.75V5.365h-9zm10.495-6.587a.98.98 0 0 0-.702.278.9.9 0 0 0-.293.685v4.063q0 .406.293.69a.97.97 0 0 0 .702.284q.42 0 .712-.284a.92.92 0 0 0 .293-.69V6.146a.9.9 0 0 0-.293-.685 1 1 0 0 0-.712-.278m-12.702.283a1 1 0 0 1 .712-.283q.41 0 .702.283a.9.9 0 0 1 .293.68v4.063a.93.93 0 0 1-.288.69.97.97 0 0 1-.707.284 1 1 0 0 1-.712-.284.92.92 0 0 1-.293-.69V6.146q0-.396.293-.68" />
-                                        </svg> (AI)</label>
+                                        </svg></label>
                                     <textarea name="news_timestamp" id="news_timestamp" class="form-control form-control-alternative" cols="30"
-                                        rows="10" @if ($video['news_timestamp_human']) disabled @endif>{{ $video['news_timestamp'] }}</textarea>
+                                        rows="10" @if ($video['news_timestamp']) disabled @endif>{{ $video['news_timestamp'] }}</textarea>
                                 </div>
-                                @if ($video['news_timestamp_human'])
+                                @if ($video['news_timestamp'])
                                     <div class="form-group mb-3">
                                         <label for="news_timestamp_human"
                                             class="form-control-label font-weight-bold text-uppercase">News Timestamp
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="green" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                                fill="currentColor" class="bi bi-person-circle mb-1" viewBox="0 0 16 16">
                                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                                                 <path fill-rule="evenodd"
                                                     d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                            </svg> (Human)</label>
+                                            </svg></label>
                                         <textarea name="news_timestamp_human" id="news_timestamp_human" class="form-control form-control-alternative"
-                                            cols="30" rows="10">{{ $video['news_timestamp_human'] }}</textarea>
+                                            cols="30" rows="10">{{ $video['news_timestamp_human'] ?? $video['news_timestamp'] }}</textarea>
                                     </div>
                                 @endif
                                 <div class="text-center">

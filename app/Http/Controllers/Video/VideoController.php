@@ -60,6 +60,8 @@ class VideoController extends Controller
             $data['news_tag_human'] = str_replace('×', '', $data['news_tag_human']);
         }
 
+        // dd($data);
+
         $video = FootageNews::find($id);
         $video->update([
             FootageNews::NEWS_TITLE => $data['news_title'] ?? $video->news_title,

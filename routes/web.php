@@ -48,5 +48,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/video/{id}/detail', [VideoController::class, 'show'])->name('video-detail'); 
     Route::get('/video/{filename}', [VideoController::class, 'stream'])->name('video.stream');
     Route::post('/video/{id}/update', [VideoController::class, 'update'])->name('video.update');
+    Route::get('/members', [UserController::class, 'members'])->name('members');
 });
 
