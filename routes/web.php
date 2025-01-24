@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\Video\VideoController;
@@ -14,6 +15,7 @@ Route::POST('/login-perform', [LoginController::class, 'store'])->name('login.pe
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::POST('/register-perform', [RegisterController::class, 'store'])->name('register.perform');
 Route::POST('/logout', [LoginController::class, 'destroy'])->name('logout');
+Route::get('/reset-password', [ResetPasswordController::class, 'index'])->name('reset.password');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'index'])->name('profile');

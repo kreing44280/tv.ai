@@ -28,6 +28,8 @@
                                             <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
                                         </div>
 
+                                        <a href="{{ route('reset.password') }}" class="text-primary text-gradient font-weight-bold text-xs float-end mt-1">forgot password?</a>
+                                        
                                         @if (session('status'))
                                             <p class="text-danger text-xs pt-1">{{ session('status') }}</p>
                                         @endif
@@ -43,6 +45,7 @@
                         </div>                        
                     </div>
                 </div>
+                <span class="mask bg-gradient-dark opacity-3"></span>
             </div>
         </section>
     </main>
