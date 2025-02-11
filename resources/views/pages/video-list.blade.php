@@ -41,31 +41,31 @@
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <a href="{{ route('video-detail', ['id' => $video->id]) }}"
-                                                        class="text-sm font-semibold mb-0 cursor-pointer text-info
-                                                text-decoration-underline">{{ $video->id }}</a>
+                                                        class="text-sm font-semibold mb-0 cursor-pointer
+                                                ">{{ $video->id }}</a>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="d-flex px-2 py-1">
                                                     <a href="{{ route('video-detail', ['id' => $video->id]) }}"
-                                                        class="text-sm font-semibold mb-0 cursor-pointer text-info
-                                                text-decoration-underline">{{ $video->raw_file_name }}</a>
+                                                        class="text-sm font-semibold mb-0 cursor-pointer
+                                                ">{{ $video->raw_file_name }}</a>
                                                 </div>
                                             </td>
                                             <td>
                                                 <a href="{{ route('video-detail', ['id' => $video->id]) }}"
-                                                    class="text-sm font-semibold mb-0 cursor-pointer text-info
-                                                text-decoration-underline">{{ $video->folder_name }}</a>
+                                                    class="text-sm font-semibold mb-0 cursor-pointer
+                                                ">{{ $video->folder_name }}</a>
                                             </td>
                                             <td>
                                                 <a href="{{ route('video-detail', ['id' => $video->id]) }}"
-                                                    class="text-sm font-semibold mb-0 cursor-pointer text-info
-                                                text-decoration-underline">{{ $video->mp3_name }}</a>
+                                                    class="text-sm font-semibold mb-0 cursor-pointer
+                                                ">{{ $video->mp3_name }}</a>
                                             </td>
                                             <td>
                                                 <a href="{{ route('video-detail', ['id' => $video->id]) }}"
-                                                    class="text-sm font-semibold mb-0 cursor-pointer text-info
-                                                text-decoration-underline">{{ $video->mp4_name }}</a>
+                                                    class="text-sm font-semibold mb-0 cursor-pointer
+                                                ">{{ $video->mp4_name }}</a>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <p
