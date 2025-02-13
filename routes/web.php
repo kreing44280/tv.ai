@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\UserController;
+use App\Http\Controllers\News\NewsController;
 use App\Http\Controllers\Video\VideoController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +15,7 @@ Route::POST('/login-perform', [LoginController::class, 'store'])->name('login.pe
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::POST('/register-perform', [RegisterController::class, 'store'])->name('register.perform');
 Route::POST('/logout', [LoginController::class, 'destroy'])->name('logout');
-// Route::get('/reset-password', [ResetPasswordController::class, 'index'])->name('reset.password');
+Route::get('/test', [NewsController::class, 'index'])->name('test');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'index'])->name('profile');
@@ -51,5 +51,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/video/{filename}', [VideoController::class, 'stream'])->name('video.stream');
     Route::post('/video/{id}/update', [VideoController::class, 'update'])->name('video.update');
     Route::get('/members', [UserController::class, 'members'])->name('members');
+    Route::get('/news', [NewsController::class, 'index'])->name('news');    
 });
 
