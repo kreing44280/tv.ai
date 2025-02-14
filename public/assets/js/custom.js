@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 const tagInput = document.getElementById('tagInput');
 const tagInputField = document.getElementById('tagInputField');
-const hiddenInput = document.getElementById('news_tag');
+const hiddenInput = document.getElementById('news_tags');
 const initialTags = hiddenInput.value.split(',').map(tag => tag.trim()).filter(tag => tag);
 
 // Populate initial tags

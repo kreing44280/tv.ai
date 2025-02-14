@@ -134,7 +134,7 @@
                                     </div>
                                 @endif
                                 <div class="form-group mb-3">
-                                    <label for="news_tag" class="form-control-label font-weight-bold text-uppercase">News
+                                    <label for="news_tags" class="form-control-label font-weight-bold text-uppercase">News
                                         Tags <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="green" class="bi bi-android2 mb-1" viewBox="0 0 16 16">
                                             <path
@@ -143,9 +143,9 @@
                                     <div class="tag-input" style="" id="tagInput">
                                         <input type="text" id="tagInputField"
                                             class="form-control form-control-alternative" placeholder="Add a tag..."
-                                            @if ($video['news_tag']) disabled @endif />
+                                            @if ($video['news_tags']) disabled @endif />
                                     </div>
-                                    <input type="hidden" name="news_tag" id="news_tag"
+                                    <input type="hidden" name="news_tags" id="news_tags"
                                         value="{{ $video['news_tag'] }}"
                                         @if ($video['news_tag']) disabled @endif />
                                 </div>

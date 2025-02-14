@@ -52,5 +52,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/video/{id}/update', [VideoController::class, 'update'])->name('video.update');
     Route::get('/members', [UserController::class, 'members'])->name('members');
     Route::get('/news', [NewsController::class, 'index'])->name('news');    
+    Route::get('/news/search', [NewsController::class, 'search'])->name('news.search');
+    Route::get('/news/{id}/detail', [NewsController::class, 'show'])->name('news-detail');
+    Route::get('/news/{id}/detail', [NewsController::class, 'show'])->name('news-detail'); 
 });
 

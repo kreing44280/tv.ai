@@ -38,7 +38,7 @@
                     <span class="nav-link-text ms-1">News</span>                  
                 </a>              
             </li>
-            {{-- <li class="nav-item">
+            <li class="nav-item">
                 <a class="nav-link {{ str_contains(request()->url(), 'video-list') == true ? 'active' : '' }}"
                     href="{{ route('video-list') }}">
                     <div
@@ -51,7 +51,7 @@
                     </div>
                     <span class="nav-link-text ms-1">Video List</span>
                 </a>
-            </li> --}}
+            </li>
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Member</h6>
             </li>
