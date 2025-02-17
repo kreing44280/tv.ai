@@ -111,7 +111,7 @@ class News extends Model
         'update_date' => 'datetime'
     ];
 
-    public $with = ['newsType', 'tvProgram'];
+    public $with = ['newsType', 'tvProgram', 'videoMaster'];
 
     public function newsType() {
         return $this->belongsTo(NewsType::class, self::NEWS_TYPE_ID, 'news_type_id');
@@ -119,5 +119,9 @@ class News extends Model
 
     public function tvProgram() {
         return $this->belongsTo(TvProgram::class, self::PROGRAM_ID, 'program_id');
+    }
+
+    public function videoMaster() {
+        return $this->belongsTo(VideoMaster::class, self::VIDEO_ID, 'video_id');
     }
 }

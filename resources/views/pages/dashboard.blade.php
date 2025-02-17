@@ -12,7 +12,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Footage News</p>
                                     <h5 class="font-weight-bolder">
-                                        {{ $count }}
+                                        {{ number_format($count) }}
                                     </h5>
                                     <p class="mb-0">
                                         ข่าวทั้งหมด

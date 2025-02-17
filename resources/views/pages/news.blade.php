@@ -22,8 +22,8 @@
                         <div class="col-8">
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">All News</p>
-                                <h5 class="font-weight-bolder">             
-                                    {{ number_format($datas->total()) }}                       
+                                <h5 class="font-weight-bolder">
+                                    {{ number_format($datas->total()) }}
                                 </h5>
                             </div>
                         </div>
@@ -82,6 +82,32 @@
                                 <input type="date" class="form-control" id="endDate" name="endDate"
                                     value="{{ request('endDate') }}">
                             </div>
+                             <div class="d-flex flex-column align-items-start">
+                                <label for="category" class="form-label me-2">Category</label>
+                                <select name="category" id="category" class="form-select">
+                                    <option value="">All</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->category_id }}"
+                                            {{ request('category') == $category->category_id ? 'selected' : '' }}>
+                                            {{ $category->category_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="d-flex flex-column align-items-start">
+                                <label for="tv_program" class="form-label me-2">TV Program</label>
+                                <select name="tv_program" id="tv_program" class="form-select">
+                                    <option value="">All</option>
+                                    @foreach ($tv_programs as $tv_program)
+                                        <option value="{{ $tv_program->program_id }}"
+                                            {{ request('tv_program') == $tv_program->program_id ? 'selected' : '' }}>
+                                            {{ $tv_program->program_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>                       
+                        <div class="d-flex flex-wrap gap-3 px-3 align-items-center">
                             <div class="d-flex flex-column align-items-start w-50">
                                 <label for="newsName" class="form-label me-2">Search</label>
                                 <input type="text" class="form-control input-search" placeholder="Search..."
