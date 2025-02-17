@@ -38,6 +38,42 @@
                                     <label for="news_content" class="form-control-label font-weight-bold text-uppercase">Content</label>
                                     <textarea name="news_content" id="news_content" class="form-control form-control-alternative" rows="10" disabled>{{ $datas->news->news_content }}</textarea>
                                 </div>
+                                <div class="form-group mb-3">
+                                    <label for="video_name"
+                                        class="form-control-label font-weight-bold text-uppercase">Video Name</label>
+                                    <input type="text" name="video_name" id="video_name"
+                                        value="{{ $datas->news->news_id}}.mp4" class="form-control form-control-alternative"
+                                        disabled />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <video controls width="640" height="360">
+                                        <source
+                                        src="{{$datas->news->video_url}}"
+                                        type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="ref_news_id_ai"
+                                        class="form-control-label font-weight-bold text-uppercase">Ref Video AI</label>
+                                    <input type="text" name="ref_news_id_ai" id="ref_news_id_ai"
+                                        value="{{ $datas->news->ref_news_id}}" class="form-control form-control-alternative"
+                                        disabled />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="news_title_ai"
+                                        class="form-control-label font-weight-bold text-uppercase">Title AI</label>
+                                    <input type="text" name="news_title_ai" id="news_title_ai"
+                                        value="{{ $datas->news->news_title_ai}}" class="form-control form-control-alternative"
+                                        disabled />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="news_content_ai"
+                                        class="form-control-label font-weight-bold text-uppercase">Content AI</label>
+                                    <input type="text" name="news_content_ai" id="news_content_ai"
+                                        value="{{ $datas->news->news_content_ai}}" class="form-control form-control-alternative"
+                                        disabled />
+                                </div>
                                 {{-- <div class="form-group mb-3">
                                     <label for="news_tags" class="form-control-label font-weight-bold text-uppercase">News
                                         Tags <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"

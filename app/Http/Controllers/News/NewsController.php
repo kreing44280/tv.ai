@@ -4,13 +4,24 @@ namespace App\Http\Controllers\News;
 
 use App\Http\Controllers\Controller;
 use App\Models\NewsCategory;
-use App\Models\TvArchived;
 
 class NewsController extends Controller
 {
     public function index()
     {
-        $datas = NewsCategory::paginate(10);
+        $datas = cache()->remember('newsCategory', now()->addHours(1), function () {
+            return NewsCategory::paginate(10);
+        });          
+
+        $datas->transform(function ($item) {
+            if ($item->news) {
+                $item->news->news_content = $this->htmlEntity($item->news->news_content);
+                $item->news->news_content_count = str_word_count($item->news->news_content);
+            }
+            return $item;
+        });
+
+        dd($datas);
 
         $datas->each(function ($item) {
             $this->setPicture($item);
@@ -52,7 +63,17 @@ class NewsController extends Controller
 
         $this->setPicture($datas);
 
-        $datas->news->news_content = $this->htmlEntity($datas->news->news_content);
+        $folder = $datas->news->tvProgram->program_permalink;
+        $news_date = $datas->news->news_date->format('Y-m-d');
+        $news_id = $datas->news->news_id;
+
+        $videoUrl = "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_720.mp4";
+
+        $videoUrl_new = file_exists(public_path($videoUrl))
+            ? $videoUrl
+            : "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4";
+
+        $datas->news->video_url = $videoUrl_new;
 
         return view('pages.news-detail', compact('datas'));
     }

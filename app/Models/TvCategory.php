@@ -65,8 +65,4 @@ class TvCategory extends Model
         return $this->hasMany(TvArchived::class, TvArchived::CATE_ID, self::ID);
     }
 
-    public function getNewsCountAttribute()
-    {
-        return $this->tvArchived()->count();
-    }
 }
