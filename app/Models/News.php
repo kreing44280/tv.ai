@@ -54,7 +54,10 @@ class News extends Model
         'seo_keyword',
         'ref_news_id',
         'news_title_ai',
-        'news_content_ai'
+        'news_content_ai',
+        'news_convert_mp3_status',
+        'news_transcript',
+        'news_convert_transcript_status',
     ];
 
     const NEWS_ID = 'news_id';
@@ -102,6 +105,9 @@ class News extends Model
     const REF_NEWS_ID = 'ref_news_id';
     const NEWS_TITLE_AI = 'news_title_ai';
     const NEWS_CONTENT_AI = 'news_content_ai';
+    const NEWS_CONVERT_MP3_STATUS = 'news_convert_mp3_status';
+    const NEWS_TRANSCRIPT = 'news_transcript';
+    const NEWS_CONVERT_TRANSCRIPT_STATUS = 'news_convert_transcript_status';
 
     public $casts = [
         'news_date' => 'datetime',
