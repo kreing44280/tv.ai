@@ -11,7 +11,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $count = NewsCategory::count();
+        $count = NewsCategory::whereHas('news', function ($query) {
+            $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
+        })->count();        
         $count_success = 0;
         $count_pending = 0;
         $count_user = User::count();

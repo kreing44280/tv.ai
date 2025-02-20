@@ -18,56 +18,69 @@ class NewsController extends Controller
 
         $tv_programs = $this->getTvProgram();
         $categories = $this->getCategories();
+        $sumNewsContent = $this->sumNewsContent();
+        $news_count = $this->newsCount();
 
         // Apply the setPicture logic
         $datas->each(function ($item) {
             $this->setPicture($item);
-        });
+        });        
 
-        $news_count = NewsCategory::count();
-
-        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count'));
-    }
-
-    private function getTvProgram()
-    {
-        return cache()->remember('tvProgram', now()->addMinutes(10), fn() => TvProgram::all());
-    }
-
-    private function getCategories()
-    {
-        return cache()->remember('category', now()->addMinutes(10), fn() => TvCategory::all());
-    }
+        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent'));
+    }   
 
     public function search()
     {
-        $newsName = request('newsName');
-        $startDate = request('startDate');
-        $endDate = request('endDate');
-        $category_id = request('category');
-        $tv_programs_id = request('tv_program');
+        // รับค่าจาก request
+        $queryParams = [
+            'newsName' => request('newsName'),
+            'startDate' => request('startDate'),
+            'endDate' => request('endDate'),
+            'category' => request('category'),
+            'tv_program' => request('tv_program'),
+            'page' => request('page', 1),
+        ];
 
-        $datas = NewsCategory::whereHas('news', function ($query) use ($newsName, $startDate, $endDate, $category_id, $tv_programs_id) {
-            if (is_numeric($newsName)) {
-                $query->where(News::NEWS_ID, $newsName);
-            } else {
-                $query->where(function ($q) use ($newsName) {
-                    $q->where(News::NEWS_ID, $newsName)
-                        ->OrWhere('news_title', 'like', '%' . $newsName . '%')
-                        ->OrWhere('news_permalink', 'like', '%' . $newsName . '%')
-                        ->OrWhere('news_content', 'like', '%' . $newsName . '%');
-                });
+        // ลบค่าที่เป็น null หรือว่าง
+        $filteredParams = array_filter($queryParams, function ($value) {
+            return !is_null($value) && $value !== '';
+        });
+
+        // ถ้า URL ปัจจุบันยังมีค่าที่ว่าง ให้ Redirect ไปยัง URL ใหม่ที่สะอาดขึ้น
+        if (request()->query() !== $filteredParams) {
+            return redirect()->to(url('/news/search') . '?' . http_build_query($filteredParams));
+        }
+
+        // ถ้า URL ถูกต้องแล้ว ให้ดำเนินการค้นหาต่อ
+        $datas = NewsCategory::whereHas('news', function ($query) use ($filteredParams) {
+            if (!empty($filteredParams['newsName'])) {
+                if (is_numeric($filteredParams['newsName'])) {
+                    $query->where(News::NEWS_ID, $filteredParams['newsName']);
+                } else {
+                    $query->where(function ($q) use ($filteredParams) {
+                        $q->where(News::NEWS_ID, $filteredParams['newsName'])
+                            ->orWhere('news_title', 'like', '%' . $filteredParams['newsName'] . '%')
+                            ->orWhere('news_permalink', 'like', '%' . $filteredParams['newsName'] . '%')
+                            ->orWhere('news_content', 'like', '%' . $filteredParams['newsName'] . '%');
+                    });
+                }
             }
-            if ($startDate && $endDate) {
-                $query->whereBetween(News::NEWS_DATE, [$startDate, $endDate]);
+
+            if (!empty($filteredParams['startDate']) && !empty($filteredParams['endDate'])) {
+                $query->whereBetween(News::NEWS_DATE, [$filteredParams['startDate'], $filteredParams['endDate']]);
             }
-            if ($category_id) {
-                $query->where(NewsCategory::CATEGORY_ID, $category_id);
+
+            if (!empty($filteredParams['category'])) {
+                $query->where(NewsCategory::CATEGORY_ID, $filteredParams['category']);
             }
-            if ($tv_programs_id) {
-                $query->where(News::PROGRAM_ID, $tv_programs_id);
+
+            if (!empty($filteredParams['tv_program'])) {
+                $query->where(News::PROGRAM_ID, $filteredParams['tv_program']);
             }
-        })->paginate(10);
+
+            $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
+        })->paginate(10, ['*'], 'page', $queryParams['page'])
+        ->appends(request()->query());
 
         $datas->each(function ($item) {
             $this->setPicture($item);
@@ -75,11 +88,13 @@ class NewsController extends Controller
 
         $tv_programs = $this->getTvProgram();
         $categories = $this->getCategories();
-        $news_count = NewsCategory::count();
+        $sumNewsContent = $this->sumNewsContent();
+        $news_count = $this->newsCount();
 
-
-        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count'));
+        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent'));
     }
+
+
 
     private function setPicture(NewsCategory $item)
     {
@@ -114,8 +129,28 @@ class NewsController extends Controller
             ? $videoUrl
             : "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4";
 
-        $datas->news->video_url = $videoUrl_new;        
+        $datas->news->video_url = $videoUrl_new;
+
+        $datas->news->news_content = strip_tags(html_entity_decode($datas->news->news_content));
 
         return view('pages.news-detail', compact('datas'));
+    }
+
+    private function newsCount() {
+        return cache()->remember('newsCount', now()->addMinutes(10), fn() => NewsCategory::count());
+    }
+
+    private function sumNewsContent() {        
+        return cache()->remember('sumNewsContent', now()->addMinutes(10), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->sum('news_content_count'));
+    }
+
+    private function getTvProgram()
+    {
+        return cache()->remember('tvProgram', now()->addMinutes(10), fn() => TvProgram::all());
+    }
+
+    private function getCategories()
+    {
+        return cache()->remember('category', now()->addMinutes(10), fn() => TvCategory::all());
     }
 }

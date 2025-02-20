@@ -48,7 +48,7 @@
                             <div class="numbers">
                                 <p class="text-sm mb-0 text-uppercase font-weight-bold">Count Content</p>
                                 <h5 class="font-weight-bolder">
-
+                                    {{ number_format($sumNewsContent) }}
                                 </h5>
                             </div>
                         </div>
