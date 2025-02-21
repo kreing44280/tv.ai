@@ -13,7 +13,11 @@ class NewsController extends Controller
     public function index()
     {
         $datas = cache()->remember('news_page_' . request('page', 1), now()->addMinutes(10), function () {
-            return NewsCategory::paginate(10); // Fetch directly with pagination
+            return NewsCategory::whereHas('news', function ($query) {
+                $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
+                $query->where(News::PUBLISH_STATUS, 1);
+                $query->where(News::ACTIVE, 1);
+            })->paginate(10); // Fetch directly with pagination
         });
 
         $tv_programs = $this->getTvProgram();
@@ -123,11 +127,17 @@ class NewsController extends Controller
         } else {
             $news_date = $datas->news->news_date->format('Y-m-d');
         }
-        $videoUrl = "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_720.mp4";
+
+        //480
+        $videoUrl = "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_480.mp4";
+
+        $videoUrl_720 = "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_720.mp4";
 
         $videoUrl_new = file_exists(public_path($videoUrl))
             ? $videoUrl
-            : "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4";
+            : (file_exists(public_path($videoUrl_720))
+                ? $videoUrl_720
+                : "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4");
 
         $datas->news->video_url = $videoUrl_new;
 
@@ -137,11 +147,15 @@ class NewsController extends Controller
     }
 
     private function newsCount() {
-        return cache()->remember('newsCount', now()->addMinutes(10), fn() => NewsCategory::count());
+        return cache()->remember('newsCount', now()->addMinutes(10), fn() => NewsCategory::whereHas('news', function ($query) {
+            $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
+            $query->where(News::PUBLISH_STATUS, 1);
+            $query->where(News::ACTIVE, 1);
+        })->count());
     }
 
     private function sumNewsContent() {        
-        return cache()->remember('sumNewsContent', now()->addMinutes(10), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->sum('news_content_count'));
+        return cache()->remember('sumNewsContent', now()->addMinutes(10), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->sum('news_content_count'));
     }
 
     private function getTvProgram()

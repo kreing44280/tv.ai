@@ -12,7 +12,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Footage News</p>
                                     <h5 class="font-weight-bolder">
-                                        {{ number_format($count) }}
+                                        {{ number_format($newsCount) }}
                                     </h5>
                                     <p class="mb-0">
                                         ข่าวทั้งหมด
@@ -42,7 +42,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Footage News</p>
                                     <h5 class="font-weight-bolder">
-                                        {{ $count_success }}
+                                        {{ $successCount }}
                                     </h5>
                                     <p class="mb-0">
                                         ข่าวที่กรอกโดย AI
@@ -72,7 +72,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Footage News</p>
                                     <h5 class="font-weight-bolder">
-                                        {{ $count_pending }}
+                                        {{ $pendingCount }}
                                     </h5>
                                     <p class="mb-0">
                                         ข่าวที่ยังไม่ได้กรอก
@@ -102,7 +102,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Members</p>
                                     <h5 class="font-weight-bolder">
-                                        {{ $count_user }}
+                                        {{ $userCount }}
                                     </h5>
                                     <p class="mb-0">
                                         จำนวนสมาชิก
@@ -121,70 +121,56 @@
         </div>
         <div class="row mt-4">
             <div class="col-lg-7 mb-lg-0 mb-4">
+                <div class="card z-index-2 h-100">                    
+                    <div class="card-body p-1 relative">
+                        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner border-radius-lg">
+                                @foreach ($populars as $popular)
+                                     <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                        <img src="{{ asset($popular->news->news_pic) }}"
+                                            alt="{{ $popular->news->news_title }}"
+                                            class="w-100 border-radius-lg shadow-sm object-contain">
+                                        <div class="carousel-caption d-none d-md-block bottom-3 text-start start-0 ms-5"
+                                            style="background: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;">
+                                            <h5 class="text-white mb-1" style="text-shadow: 2px 2px black">{{ $popular->news->news_title }}</h5>
+                                        </div>
+                                    </div>
+                                @endforeach
+                                <button class="carousel-control-prev w-5 me-3" type="button"
+                                    data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next w-5 me-3" type="button"
+                                    data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>   
+            <div class="col-lg-5 mb-lg-0 mb-4">
+                <div class="card z-index-2 h-100 d-flex align-items-center justify-content-center">
+                    <div class="card-body p-1 relative">
+                        <div class="chart">
+                            <canvas id="doughnutChart" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>         
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-12 mb-lg-0 mb-4">
                 <div class="card z-index-2 h-100">
                     <div class="card-header pb-0 pt-3 bg-transparent">
-                        <h6 class="text-capitalize">Sales overview</h6>
-                        <p class="text-sm mb-0">
-                            <i class="fa fa-arrow-up text-success"></i>
-                            <span class="font-weight-bold">4% more</span> in 2021
-                        </p>
+                        <h6 class="text-capitalize">Rating</h6>                       
                     </div>
                     <div class="card-body p-3">
                         <div class="chart">
                             <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-5">
-                <div class="card card-carousel overflow-hidden h-100 p-0">
-                    <div id="carouselExampleCaptions" class="carousel slide h-100" data-bs-ride="carousel">
-                        <div class="carousel-inner border-radius-lg h-100">
-                            <div class="carousel-item h-100 active"
-                                style="background-image: url('./img/carousel-1.jpg');
-            background-size: cover;">
-                                <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
-                                    <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
-                                        <i class="ni ni-camera-compact text-dark opacity-10"></i>
-                                    </div>
-                                    <h5 class="text-white mb-1">Get started with Argon</h5>
-                                    <p>There’s nothing I really wanted to do in life that I wasn’t able to get good at.</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item h-100"
-                                style="background-image: url('./img/carousel-2.jpg');
-            background-size: cover;">
-                                <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
-                                    <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
-                                        <i class="ni ni-bulb-61 text-dark opacity-10"></i>
-                                    </div>
-                                    <h5 class="text-white mb-1">Faster way to create web pages</h5>
-                                    <p>That’s my skill. I’m not really specifically talented at anything except for the
-                                        ability to learn.</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item h-100"
-                                style="background-image: url('./img/carousel-3.jpg');
-            background-size: cover;">
-                                <div class="carousel-caption d-none d-md-block bottom-0 text-start start-0 ms-5">
-                                    <div class="icon icon-shape icon-sm bg-white text-center border-radius-md mb-3">
-                                        <i class="ni ni-trophy text-dark opacity-10"></i>
-                                    </div>
-                                    <h5 class="text-white mb-1">Share with us your design tips!</h5>
-                                    <p>Don’t be afraid to be wrong because you can’t learn anything from a compliment.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev w-5 me-3" type="button"
-                            data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next w-5 me-3" type="button"
-                            data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -346,12 +332,16 @@
         gradientStroke1.addColorStop(1, 'rgba(251, 99, 64, 0.2)');
         gradientStroke1.addColorStop(0.2, 'rgba(251, 99, 64, 0.0)');
         gradientStroke1.addColorStop(0, 'rgba(251, 99, 64, 0)');
+
+        const categoryNames = {!! json_encode($categoryNames) !!};
+        const categoryViews = {!! json_encode($categoryViews) !!};
+
         new Chart(ctx1, {
             type: "line",
             data: {
-                labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                labels: categoryNames,
                 datasets: [{
-                    label: "Mobile apps",
+                    label: "Views",
                     tension: 0.4,
                     borderWidth: 0,
                     pointRadius: 0,
@@ -359,7 +349,7 @@
                     backgroundColor: gradientStroke1,
                     borderWidth: 3,
                     fill: true,
-                    data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+                    data: categoryViews,
                     maxBarThickness: 6
 
                 }],
@@ -419,6 +409,32 @@
                     },
                 },
             },
+        });
+
+        
+        const ctx2 = document.getElementById("doughnutChart").getContext("2d");
+
+        const dataDoughnut = {
+            labels: ['ข่าวทั้งหมด', 'ข่าวที่กรองโดย AI', 'ข่าวที่ยังไม่ถูกกรอง'],
+            datasets: [{
+                data: [{{$newsCount}}, {{$aiNewsCount}}, {{$aiNewsPendingCount}}],
+                backgroundColor: ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99'],
+                hoverOffset: 5
+            }]
+        };
+
+        const optionsDoughnut = {
+            responsive: false,
+            maintainAspectRatio: false,
+            width: 400,
+            height: 400,
+            cutout: '50%'
+        };
+
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: dataDoughnut,
+            options: optionsDoughnut
         });
     </script>
 @endpush

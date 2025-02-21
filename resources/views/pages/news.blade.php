@@ -71,18 +71,18 @@
             <div class="card p-0">
                 <div class="card-body pt-4">
                     <form action="{{ route('news.search') }}" method="get">
-                        <div class="d-flex flex-wrap gap-3 px-3 align-items-center">
-                            <div class="d-flex flex-column align-items-start">
+                        <div class="row grid-cols-2">
+                            <div class="col d-flex flex-column align-items-start">
                                 <label for="startDate" class="form-label me-2">Start Date</label>
                                 <input type="date" class="form-control" id="startDate" name="startDate"
                                     value="{{ request('startDate') }}">
                             </div>
-                            <div class="d-flex flex-column align-items-start">
+                            <div class="col d-flex flex-column align-items-start">
                                 <label for="endDate" class="form-label me-2">End Date</label>
                                 <input type="date" class="form-control" id="endDate" name="endDate"
                                     value="{{ request('endDate') }}">
                             </div>
-                             <div class="d-flex flex-column align-items-start">
+                            <div class="col d-flex flex-column align-items-start">
                                 <label for="category" class="form-label me-2">Category</label>
                                 <select name="category" id="category" class="form-select">
                                     <option value="">All</option>
@@ -94,7 +94,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="d-flex flex-column align-items-start">
+                            <div class="col d-flex flex-column align-items-start">
                                 <label for="tv_program" class="form-label me-2">TV Program</label>
                                 <select name="tv_program" id="tv_program" class="form-select">
                                     <option value="">All</option>
@@ -106,17 +106,18 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>                       
-                        <div class="d-flex flex-wrap gap-3 px-3 align-items-center">
-                            <div class="d-flex flex-column align-items-start w-50">
+                        </div>
+                        <div class="row grid-cols-2 gap-3 align-items-center">
+                            <div class="col d-flex flex-column align-items-start">
                                 <label for="newsName" class="form-label me-2">Search</label>
                                 <input type="text" class="form-control input-search" placeholder="Search..."
                                     id="newsName" name="newsName" value="{{ request('newsName') }}">
                             </div>
-                            <div class="d-flex gap-2">
+                            <div class="col d-flex gap-2">
                                 <button type="submit" class="btn btn-primary" style="margin-top: 2.5rem"
                                     id="searchButton">Search</button>
-                                <a href="{{ route('news') }}" class="btn btn-secondary" style="margin-top: 2.5rem">Reset</a>
+                                <a href="{{ route('news') }}" class="btn btn-secondary"
+                                    style="margin-top: 2.5rem">Reset</a>
                             </div>
                         </div>
                     </form>
@@ -129,7 +130,7 @@
                                     <div class="d-flex flex-column">
                                         <h6 class="text-sm text-truncate" style="max-width: 300px">
                                             {{-- <span 
-                                            class="text-xs @if($data->news->news_convert_mp3_status == 'success') text-success @else text-warning @endif opacity-8 me-1" 
+                                            class="text-xs @if ($data->news->news_convert_mp3_status == 'success') text-success @else text-warning @endif opacity-8 me-1" 
                                             aria-hidden="true">
                                                 ( {{$data->news->news_convert_mp3_status}} )</span>  --}}
                                             {{ $data->news->news_title }}
@@ -137,11 +138,11 @@
                                         <span class="mb-2 text-xs">News ID: <span
                                                 class="text-dark font-weight-bold ms-sm-2">{{ $data->news->news_id }}</span></span>
                                         <span class="mb-2 text-xs">TV Program: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news->tvProgram->program_name }}</span></span>
+                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news->tvProgram->program_name ?? '-' }}</span></span>
                                         <span class="mb-2 text-xs">Category: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->TvCategory->category_name }}</span></span>
+                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->TvCategory->category_name ?? '-' }}</span></span>
                                         <span class="mb-2 text-xs">News Type: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news->newsType->news_type_name }}</span></span>
+                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news->newsType->news_type_name ?? '-' }}</span></span>
                                         <span class="mb-2 text-xs">Created AT: <span
                                                 class="text-dark ms-sm-2 font-weight-bold">{{ $data->news->news_date->format('Y-m-d') }}
                                                 <span
@@ -164,6 +165,6 @@
             </div>
         </div>
 
-        @include('layouts.footers.auth.footer')
+        {{-- @include('layouts.footers.auth.footer') --}}
     </div>
 @endsection
