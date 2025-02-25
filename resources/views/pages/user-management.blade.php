@@ -30,7 +30,7 @@
                                     <td>
                                         <div class="px-2">                                            
                                             <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm">{{$user->name}}</h6>
+                                                <h6 class="mb-0 text-sm">{{$user->user_name}}</h6>
                                             </div>
                                         </div>
                                     </td>
