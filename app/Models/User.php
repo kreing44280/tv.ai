@@ -50,7 +50,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function roles () {
-        // 
+    public $with = ['UserRoles'];
+
+    public function UserRoles () {
+        return $this->hasOne(UserRole::class, 'user_user_id', 'user_id');
     }
 }
