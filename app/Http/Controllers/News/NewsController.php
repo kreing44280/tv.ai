@@ -13,7 +13,7 @@ class NewsController extends Controller
     public function index()
     {
         $datas = cache()->remember('news_page_' . request('page', 1), now()->addMinutes(10), function () {
-            return NewsCategory::whereHas('news', function ($query) {
+            return NewsCategory::with(['TvCategory', 'news'])->whereHas('news', function ($query) {
                 $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
                 $query->where(News::PUBLISH_STATUS, 1);
                 $query->where(News::ACTIVE, 1);

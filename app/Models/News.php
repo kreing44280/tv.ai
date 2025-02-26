@@ -119,17 +119,73 @@ class News extends Model
         'update_date' => 'datetime'
     ];
 
-    public $with = ['newsType', 'tvProgram', 'videoMaster'];
-
-    public function newsType() {
+    public function newsType()
+    {
         return $this->belongsTo(NewsType::class, self::NEWS_TYPE_ID, 'news_type_id');
     }
 
-    public function tvProgram() {
+    public function tvProgram()
+    {
         return $this->belongsTo(TvProgram::class, self::PROGRAM_ID, 'program_id');
     }
 
-    public function videoMaster() {
+    public function videoMaster()
+    {
         return $this->belongsTo(VideoMaster::class, self::VIDEO_ID, 'video_id');
+    }
+
+    public static function getPopular()
+    {
+        // return cache()->remember('popular', now()->addMinutes(10), function () {          
+        $data = News::whereIn(News::NEWS_TYPE_ID, [1, 7])
+            ->where(News::PUBLISH_STATUS, 1)
+            ->where(News::ACTIVE, 1)
+            ->orderBy('news_count', 'desc')
+            ->limit(10)
+            ->get();
+
+        foreach ($data as $item) {
+            $image = $item->news_pic;
+            $imagePath = 'https://backend.teroasia.com/uploads/pic_news/mid_' . $image;
+
+            $item->news_pic = (!empty($image) && @get_headers($imagePath)[0] !== 'HTTP/1.1 404 Not Found')
+                ? asset($imagePath)
+                : asset('https://cdn4.vectorstock.com/i/1000x1000/55/63/error-404-file-not-found-web-icon-vector-21745563.jpg');
+        }
+
+        return $data;
+        // });
+    }
+
+    public static function getPublishedNewsCount()
+    {
+        return cache()->remember('publishedNewsCount', now()->addMinutes(10), function () {
+            return News::whereIn(News::NEWS_TYPE_ID, [1, 7])
+                ->where(News::PUBLISH_STATUS, 1)
+                ->where(News::ACTIVE, 1)
+                ->count();
+        });
+    }
+
+    public static function getAINewsCount()
+    {
+        return cache()->remember('aiNewsCount', now()->addMinutes(10), function () {
+            return News::WhereIn(News::NEWS_TYPE_ID, [1, 7])
+                ->where(News::PUBLISH_STATUS, 1)
+                ->where(News::ACTIVE, 1)
+                ->whereNotNull(News::REF_NEWS_ID)
+                ->count();
+        });
+    }
+
+    public static function getAINewsPendingCount()
+    {
+        return cache()->remember('aiNewsPendingCount', now()->addMinutes(10), function () {
+            return News::WhereIn(News::NEWS_TYPE_ID, [1, 7])
+                ->where(News::PUBLISH_STATUS, 1)
+                ->where(News::ACTIVE, 1)
+                ->whereNull(News::REF_NEWS_ID)
+                ->count();
+        });
     }
 }

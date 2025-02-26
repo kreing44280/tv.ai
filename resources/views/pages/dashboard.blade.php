@@ -127,12 +127,12 @@
                             <div class="carousel-inner border-radius-lg">
                                 @foreach ($populars as $popular)
                                      <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                        <img src="{{ asset($popular->news->news_pic) }}"
-                                            alt="{{ $popular->news->news_title }}"
+                                        <img src="{{ asset($popular->news_pic) }}"
+                                            alt="{{ $popular->news_title }}"
                                             class="w-100 border-radius-lg shadow-sm object-contain">
                                         <div class="carousel-caption d-none d-md-block bottom-3 text-start start-0 ms-5"
                                             style="background: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;">
-                                            <h5 class="text-white mb-1" style="text-shadow: 2px 2px black">{{ $popular->news->news_title }}</h5>
+                                            <h5 class="text-white mb-1" style="text-shadow: 2px 2px black">{{ $popular->news_title }}</h5>
                                         </div>
                                     </div>
                                 @endforeach
