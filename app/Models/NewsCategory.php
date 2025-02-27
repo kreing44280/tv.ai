@@ -24,12 +24,14 @@ class NewsCategory extends Model
 
     public function news()
     {
-        return $this->belongsTo(News::class, self::NEWS_ID, 'news_id');
+        return $this->belongsTo(News::class, self::NEWS_ID, 'news_id')
+            ->select('news_title', 'news_id', 'news_pic', 'news_date', 'news_type_id', 'program_id', 'video_id');
     }
 
     public function TvCategory()
     {
-        return $this->belongsTo(TvCategory::class, self::CATEGORY_ID);
+        return $this->belongsTo(TvCategory::class, self::CATEGORY_ID)
+            ->select('category_name', 'category_id');
     }
     public static function categoryCountView()
     {

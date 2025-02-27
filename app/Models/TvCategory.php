@@ -57,9 +57,7 @@ class TvCategory extends Model
     const CATEGORY_COLOR = 'category_color';
     const IS_CATEGORY_SEARCH = 'is_category_search';
     const PLAYLIST_ID = 'playlist_id';
-
-    protected $appends = ['news_count']; // Append to JSON response
-
+    
     public function tvArchived()
     {
         return $this->hasMany(TvArchived::class, TvArchived::CATE_ID, self::ID);

@@ -17,9 +17,9 @@ class NewsController extends Controller
                 $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
                 $query->where(News::PUBLISH_STATUS, 1);
                 $query->where(News::ACTIVE, 1);
-            })->paginate(10); // Fetch directly with pagination
+            })->paginate(10);
         });
-
+   
         $tv_programs = $this->getTvProgram();
         $categories = $this->getCategories();
         $sumNewsContent = $this->sumNewsContent();
@@ -28,10 +28,10 @@ class NewsController extends Controller
         // Apply the setPicture logic
         $datas->each(function ($item) {
             $this->setPicture($item);
-        });        
+        });
 
         return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent'));
-    }   
+    }
 
     public function search()
     {
@@ -84,11 +84,11 @@ class NewsController extends Controller
 
             $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
         })->paginate(10, ['*'], 'page', $queryParams['page'])
-        ->appends(request()->query());
+            ->appends(request()->query());
 
         $datas->each(function ($item) {
             $this->setPicture($item);
-        });
+        });        
 
         $tv_programs = $this->getTvProgram();
         $categories = $this->getCategories();
@@ -146,7 +146,8 @@ class NewsController extends Controller
         return view('pages.news-detail', compact('datas'));
     }
 
-    private function newsCount() {
+    private function newsCount()
+    {
         return cache()->remember('newsCount', now()->addMinutes(10), fn() => NewsCategory::whereHas('news', function ($query) {
             $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
             $query->where(News::PUBLISH_STATUS, 1);
@@ -154,7 +155,8 @@ class NewsController extends Controller
         })->count());
     }
 
-    private function sumNewsContent() {        
+    private function sumNewsContent()
+    {
         return cache()->remember('sumNewsContent', now()->addMinutes(10), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->sum('news_content_count'));
     }
 
