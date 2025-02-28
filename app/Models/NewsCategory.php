@@ -35,36 +35,32 @@ class NewsCategory extends Model
     }
     public static function categoryCountView()
     {
-        return cache()->remember('categoryCountView', now()->addMinutes(10), function () {
-            return TvCategory::selectRaw('category.category_id, category.category_name, COALESCE(SUM(b.news_count), 0) AS total_news_count')
-                ->join('news_category as c', 'category.category_id', '=', 'c.category_id')
-                ->join('news as b', function ($join) {
-                    $join->on('c.news_id', '=', 'b.news_id')
-                        ->whereIn('b.news_type_id', [1, 7])
-                        ->where('b.publish_status', 1)
-                        ->where('b.active', 1);
-                })
-                ->groupBy('category.category_id', 'category.category_name')
-                ->orderByDesc('total_news_count')
-                ->limit(10)
-                ->get();
-        });
+        return TvCategory::selectRaw('category.category_id, category.category_name, COALESCE(SUM(b.news_count), 0) AS total_news_count')
+            ->join('news_category as c', 'category.category_id', '=', 'c.category_id')
+            ->join('news as b', function ($join) {
+                $join->on('c.news_id', '=', 'b.news_id')
+                    ->whereIn('b.news_type_id', [1, 7])
+                    ->where('b.publish_status', 1)
+                    ->where('b.active', 1);
+            })
+            ->groupBy('category.category_id', 'category.category_name')
+            ->orderByDesc('total_news_count')
+            ->limit(10)
+            ->get();
     }
 
     public static function categoryCountNews()
     {
-        return cache()->remember('categoryCountNews_' . request('page', 1), now()->addMinutes(10), function () {
-            return TvCategory::selectRaw('category.category_id, category.category_name, COUNT(b.news_id) AS total_news_count')
-                ->join('news_category as c', 'category.category_id', '=', 'c.category_id')
-                ->join('news as b', function ($join) {
-                    $join->on('c.news_id', '=', 'b.news_id')
-                        ->whereIn('b.news_type_id', [1, 7])
-                        ->where('b.publish_status', 1)
-                        ->where('b.active', 1);
-                })
-                ->groupBy('category.category_id', 'category.category_name')
-                ->orderByDesc('total_news_count')
-                ->paginate(5);
-        });
+        return TvCategory::selectRaw('category.category_id, category.category_name, COUNT(b.news_id) AS total_news_count')
+            ->join('news_category as c', 'category.category_id', '=', 'c.category_id')
+            ->join('news as b', function ($join) {
+                $join->on('c.news_id', '=', 'b.news_id')
+                    ->whereIn('b.news_type_id', [1, 7])
+                    ->where('b.publish_status', 1)
+                    ->where('b.active', 1);
+            })
+            ->groupBy('category.category_id', 'category.category_name')
+            ->orderByDesc('total_news_count')
+            ->paginate(10);
     }
 }

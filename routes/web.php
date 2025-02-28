@@ -54,6 +54,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/news', [NewsController::class, 'index'])->name('news');    
     Route::get('/news/search', [NewsController::class, 'search'])->name('news.search');
     Route::get('/news/{id}/detail', [NewsController::class, 'show'])->name('news-detail');
-    Route::get('/news/{id}/detail', [NewsController::class, 'show'])->name('news-detail'); 
+    Route::post('/news/{id}/update', [NewsController::class, 'update'])->name('news.update'); 
 });
 

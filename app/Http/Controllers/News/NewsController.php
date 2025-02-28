@@ -12,7 +12,7 @@ class NewsController extends Controller
 {
     public function index()
     {
-        $datas = cache()->remember('news_page_' . request('page', 1), now()->addMinutes(10), function () {
+        $datas = cache()->remember('news_page_' . request('page', 1), now()->addHours(1), function () {
             return NewsCategory::with(['TvCategory', 'news'])->whereHas('news', function ($query) {
                 $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
                 $query->where(News::PUBLISH_STATUS, 1);
@@ -112,7 +112,7 @@ class NewsController extends Controller
 
     public function show($id)
     {
-        $datas = NewsCategory::whereHas('news', function ($query) use ($id) {
+        $datas = NewsCategory::with(['TvCategory', 'news'])->whereHas('news', function ($query) use ($id) {
             $query->where('news_id', $id);
         })->first();
 
@@ -148,7 +148,7 @@ class NewsController extends Controller
 
     private function newsCount()
     {
-        return cache()->remember('newsCount', now()->addMinutes(10), fn() => NewsCategory::whereHas('news', function ($query) {
+        return cache()->remember('newsCount', now()->addHours(1), fn() => NewsCategory::whereHas('news', function ($query) {
             $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
             $query->where(News::PUBLISH_STATUS, 1);
             $query->where(News::ACTIVE, 1);
@@ -157,16 +157,29 @@ class NewsController extends Controller
 
     private function sumNewsContent()
     {
-        return cache()->remember('sumNewsContent', now()->addMinutes(10), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->sum('news_content_count'));
+        return cache()->remember('sumNewsContent', now()->addHours(1), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->sum('news_content_count'));
     }
 
     private function getTvProgram()
     {
-        return cache()->remember('tvProgram', now()->addMinutes(10), fn() => TvProgram::all());
+        return cache()->remember('tvProgram', now()->addHours(1), fn() => TvProgram::all());
     }
 
     private function getCategories()
     {
-        return cache()->remember('category', now()->addMinutes(10), fn() => TvCategory::all());
+        return cache()->remember('category', now()->addHours(1), fn() => TvCategory::all());
+    }
+
+    public function update(News $id)
+    {
+        $data = request()->all();   
+        
+        // $id->update([
+        //     News::NEWS_TITLE => $data['news_title'] ?? $id->news_title,
+        //     News::NEWS_TRANSCRIPT => $data['news_transcript'] ?? $id->news_transcript,
+        //     News::NEWS_CONTENT => $data['news_content'] ?? $id->news_content
+        // ]);
+
+        return redirect()->route('news-detail', $id->news_id);
     }
 }

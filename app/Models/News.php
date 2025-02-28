@@ -8,6 +8,7 @@ class News extends Model
 {
     protected $connection = 'mysql2';
     protected $table = 'news';
+    protected $primaryKey = 'news_id';
 
     protected $fillable = [
         'news_id',
@@ -126,68 +127,68 @@ class News extends Model
 
     public function tvProgram()
     {
-        return $this->belongsTo(TvProgram::class, self::PROGRAM_ID, 'program_id')->select('program_name', 'program_id');
+        return $this->belongsTo(TvProgram::class, self::PROGRAM_ID, 'program_id')->select('program_name', 'program_id', 'program_permalink');
     }
 
     public function videoMaster()
     {
-        return $this->belongsTo(VideoMaster::class, self::VIDEO_ID, 'video_id')->select('video_name', 'video_id');
+        return $this->belongsTo(VideoMaster::class, self::VIDEO_ID, 'video_id')->select('video_name', 'video_id', 'video_date');
     }
 
-    public static function getPopular()
+    public static function getData()
     {
-        return cache()->remember('popular', now()->addMinutes(10), function () {
-            $data = News::whereIn(News::NEWS_TYPE_ID, [1, 7])
+        return cache()->remember('getData', now()->addHours(1), function () {
+            $news = News::whereIn(News::NEWS_TYPE_ID, [1, 7])
                 ->where(News::PUBLISH_STATUS, 1)
                 ->where(News::ACTIVE, 1)
                 ->orderBy('news_count', 'desc')
                 ->limit(10)
                 ->get();
 
-            foreach ($data as $item) {
-                $image = $item->news_pic;
-                $imagePath = 'https://backend.teroasia.com/uploads/pic_news/mid_' . $image;
+            return [
+                'popular' => $news->map(function ($item) {
+                    $image = $item->news_pic;
+                    $imagePath = 'https://backend.teroasia.com/uploads/pic_news/mid_' . $image;
 
-                $item->news_pic = (!empty($image) && @get_headers($imagePath)[0] !== 'HTTP/1.1 404 Not Found')
-                    ? asset($imagePath)
-                    : asset('https://cdn4.vectorstock.com/i/1000x1000/55/63/error-404-file-not-found-web-icon-vector-21745563.jpg');
-            }
+                    $item->news_pic = (!empty($image) && @get_headers($imagePath)[0] !== 'HTTP/1.1 404 Not Found')
+                        ? asset($imagePath)
+                        : asset('https://cdn4.vectorstock.com/i/1000x1000/55/63/error-404-file-not-found-web-icon-vector-21745563.jpg');
 
-            return $data;
+                    return $item;
+                }),
+                'categoryCountViews' => NewsCategory::categoryCountView(),
+                'newsCount' => self::getPublishedNewsCount(),
+                'aiNewsCount' => self::getAINewsCount(),
+                'pendingCount' => self::getAINewsPendingCount()
+            ];
         });
     }
 
-    public static function getPublishedNewsCount()
+    private static function getPublishedNewsCount()
     {
-        return cache()->remember('publishedNewsCount', now()->addMinutes(10), function () {
-            return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')->whereIn(News::NEWS_TYPE_ID, [1, 7])
-                ->where('news.publish_status', 1)
-                ->where('news.active', 1)
-                ->count();
-        });
+        return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')->whereIn(News::NEWS_TYPE_ID, [1, 7])
+            ->where('news.publish_status', 1)
+            ->where('news.active', 1)
+            ->count();
     }
 
-    public static function getAINewsCount()
+    private static function getAINewsCount()
     {
-        return cache()->remember('aiNewsCount', now()->addMinutes(10), function () {
-            return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
-                ->whereIn('news.news_type_id', [1, 7])
-                ->where('news.publish_status', 1)
-                ->where('news.active', 1)
-                ->whereNotNull('news.ref_news_id')
-                ->count();
-        });
+        return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
+            ->whereIn('news.news_type_id', [1, 7])
+            ->where('news.publish_status', 1)
+            ->where('news.active', 1)
+            ->whereNotNull('news.ref_news_id')
+            ->count();
     }
 
-    public static function getAINewsPendingCount()
+    private static function getAINewsPendingCount()
     {
-        return cache()->remember('aiNewsPendingCount', now()->addMinutes(10), function () {
-            return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
-                ->whereIn('news.news_type_id', [1, 7])
-                ->where('news.publish_status', 1)
-                ->where('news.active', 1)
-                ->whereNull('news.ref_news_id')
-                ->count();
-        });
+        return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
+            ->whereIn('news.news_type_id', [1, 7])
+            ->where('news.publish_status', 1)
+            ->where('news.active', 1)
+            ->whereNull('news.ref_news_id')
+            ->count();
     }
 }

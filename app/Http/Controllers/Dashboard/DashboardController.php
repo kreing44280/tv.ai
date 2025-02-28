@@ -11,15 +11,14 @@ class DashboardController extends Controller
 {
     public function index()
     {      
-        $populars = News::getPopular();
-        $categoryCountViews = NewsCategory::categoryCountView();            
-        $cateAll = NewsCategory::categoryCountNews();          
+        $data = News::getData(); 
+        $populars = $data['popular'];
+        $categoryNames = $data['categoryCountViews']->pluck('category_name')->toArray();
+        $categoryViews = $data['categoryCountViews']->pluck('total_news_count')->toArray();
         $userCount = User::count();
-        $newsCount = News::getPublishedNewsCount();    
-        $aiNewsCount = News::getAINewsCount();
-        $pendingCount = News::getAINewsPendingCount();                     
-        $categoryNames = $categoryCountViews->pluck('category_name')->toArray();
-        $categoryViews = $categoryCountViews->pluck('total_news_count')->toArray();
+        $newsCount = $data['newsCount'];
+        $aiNewsCount = $data['aiNewsCount'];
+        $pendingCount = $data['pendingCount'];
             
         return view('pages.dashboard', compact(
             'newsCount',
@@ -28,8 +27,7 @@ class DashboardController extends Controller
             'populars',
             'categoryNames',
             'categoryViews',
-            'aiNewsCount',
-            'cateAll'
+            'aiNewsCount'
         ));
     }
     
