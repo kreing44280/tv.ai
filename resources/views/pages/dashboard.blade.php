@@ -121,18 +121,22 @@
         </div>
         <div class="row mt-4">
             <div class="col-lg-7 mb-lg-0 mb-4">
-                <div class="card z-index-2 h-100">                    
+                <div class="card z-index-2 h-100">
+                    <div class="card-header pb-0 pt-3 bg-transparent">
+                        <h6 class="text-capitalize">Top news</h6>
+                    </div>
                     <div class="card-body p-1 relative">
                         <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
                             <div class="carousel-inner border-radius-lg">
                                 @foreach ($populars as $popular)
-                                     <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                        <img src="{{ asset($popular->news_pic) }}"
+                                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                        <img width="680" height="364" src="{{ asset($popular->news_pic) }}"
                                             alt="{{ $popular->news_title }}"
                                             class="w-100 border-radius-lg shadow-sm object-contain">
                                         <div class="carousel-caption d-none d-md-block bottom-3 text-start start-0 ms-5"
                                             style="background: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;">
-                                            <h5 class="text-white mb-1" style="text-shadow: 2px 2px black">{{ $popular->news_title }}</h5>
+                                            <h5 class="text-white mb-1" style="text-shadow: 2px 2px black">
+                                                {{ $popular->news_title }}</h5>
                                         </div>
                                     </div>
                                 @endforeach
@@ -150,22 +154,40 @@
                         </div>
                     </div>
                 </div>
-            </div>   
+            </div>
             <div class="col-lg-5 mb-lg-0 mb-4">
                 <div class="card z-index-2 h-100 d-flex align-items-center justify-content-center">
                     <div class="card-body p-1 relative">
-                        <div class="chart">
+                        <div class="chart pb-4">
                             <canvas id="doughnutChart" class="chart-canvas"></canvas>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <p class="mb-0 text-sm text-primary">จํานวนข่าวทั้งหมด: </p>
+                            <h5 class="mb-0 text-sm font-weight-bolder text-primary">
+                                {{ number_format($newsCount) }}
+                            </h5>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <p class="mb-0 text-sm text-info">จํานวนข่าวที่กรอกโดย AI: </p>
+                            <h5 class="mb-0 text-sm font-weight-bolder text-info">
+                                {{ number_format($aiNewsCount) }}
+                            </h5>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <p class="mb-0 text-sm text-success">จํานวนข่าวที่ยังไม่ได้กรอก: </p>
+                            <h5 class="mb-0 text-sm font-weight-bolder text-success">
+                                {{ number_format($pendingCount) }}
+                            </h5>
                         </div>
                     </div>
                 </div>
-            </div>         
+            </div>
         </div>
         <div class="row mt-4">
             <div class="col-lg-12 mb-lg-0 mb-4">
                 <div class="card z-index-2 h-100">
                     <div class="card-header pb-0 pt-3 bg-transparent">
-                        <h6 class="text-capitalize">Rating</h6>                       
+                        <h6 class="text-capitalize">Rating</h6>
                     </div>
                     <div class="card-body p-3">
                         <div class="chart">
@@ -174,7 +196,7 @@
                     </div>
                 </div>
             </div>
-        </div>      
+        </div>
     </div>
 @endsection
 
@@ -207,8 +229,7 @@
                     borderWidth: 3,
                     fill: true,
                     data: categoryViews,
-                    maxBarThickness: 6
-
+                    maxBarThickness: 6,                    
                 }],
             },
             options: {
@@ -222,59 +243,17 @@
                 interaction: {
                     intersect: false,
                     mode: 'index',
-                },
-                scales: {
-                    y: {
-                        grid: {
-                            drawBorder: false,
-                            display: true,
-                            drawOnChartArea: true,
-                            drawTicks: false,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            padding: 10,
-                            color: '#fbfbfb',
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
-                        }
-                    },
-                    x: {
-                        grid: {
-                            drawBorder: false,
-                            display: false,
-                            drawOnChartArea: false,
-                            drawTicks: false,
-                            borderDash: [5, 5]
-                        },
-                        ticks: {
-                            display: true,
-                            color: '#ccc',
-                            padding: 20,
-                            font: {
-                                size: 11,
-                                family: "Open Sans",
-                                style: 'normal',
-                                lineHeight: 2
-                            },
-                        }
-                    },
-                },
+                },                
             },
         });
 
-        
+
         const ctx2 = document.getElementById("doughnutChart").getContext("2d");
 
         const dataDoughnut = {
             labels: ['ข่าวทั้งหมด', 'ข่าวที่กรองโดย AI', 'ข่าวที่ยังไม่ถูกกรอง'],
             datasets: [{
-                data: [{{$newsCount}}, {{$aiNewsCount}}, {{$pendingCount}}],
+                data: [{{ $newsCount }}, {{ $aiNewsCount }}, {{ $pendingCount }}],
                 backgroundColor: ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99'],
                 hoverOffset: 5
             }]

@@ -120,6 +120,7 @@ class News extends Model
         'update_date' => 'datetime'
     ];
 
+
     public function newsType()
     {
         return $this->belongsTo(NewsType::class, self::NEWS_TYPE_ID, 'news_type_id')->select('news_type_name', 'news_type_id');
@@ -147,21 +148,27 @@ class News extends Model
 
             return [
                 'popular' => $news->map(function ($item) {
-                    $image = $item->news_pic;
-                    $imagePath = 'https://backend.teroasia.com/uploads/pic_news/mid_' . $image;
-
-                    $item->news_pic = (!empty($image) && @get_headers($imagePath)[0] !== 'HTTP/1.1 404 Not Found')
-                        ? asset($imagePath)
-                        : asset('https://cdn4.vectorstock.com/i/1000x1000/55/63/error-404-file-not-found-web-icon-vector-21745563.jpg');
+                    $item->setPicture();
 
                     return $item;
                 }),
                 'categoryCountViews' => NewsCategory::categoryCountView(),
+                'cateAll' => NewsCategory::categoryCountNews(),
                 'newsCount' => self::getPublishedNewsCount(),
                 'aiNewsCount' => self::getAINewsCount(),
                 'pendingCount' => self::getAINewsPendingCount()
             ];
         });
+    }
+
+    public function setPicture()
+    {
+        $image = $this->news_pic;
+        $imagePath = 'https://backend.teroasia.com/uploads/pic_news/mid_' . $image;
+
+        $this->news_pic = (!empty($image) && @get_headers($imagePath)[0] !== 'HTTP/1.1 404 Not Found')
+            ? asset($imagePath)
+            : asset('https://cdn4.vectorstock.com/i/1000x1000/55/63/error-404-file-not-found-web-icon-vector-21745563.jpg');
     }
 
     private static function getPublishedNewsCount()

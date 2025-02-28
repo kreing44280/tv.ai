@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\News;
-use App\Models\NewsCategory;
 use App\Models\User;
 
 class DashboardController extends Controller
