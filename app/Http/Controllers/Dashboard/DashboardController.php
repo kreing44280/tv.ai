@@ -9,7 +9,7 @@ use App\Models\User;
 class DashboardController extends Controller
 {
     public function index()
-    {      
+    {              
         $data = News::getData(); 
         $populars = $data['popular'];
         $categoryNames = $data['categoryCountViews']->pluck('category_name')->toArray();

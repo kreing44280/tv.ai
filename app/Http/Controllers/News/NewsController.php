@@ -17,9 +17,9 @@ class NewsController extends Controller
                 $query->whereIn(News::NEWS_TYPE_ID, [1, 7]);
                 $query->where(News::PUBLISH_STATUS, 1);
                 $query->where(News::ACTIVE, 1);
-            })->limit(10000)->paginate(10);
+            })->paginate(10);
         });
-
+   
         $tv_programs = $this->getTvProgram();
         $categories = $this->getCategories();
         $sumNewsContent = $this->sumNewsContent();
@@ -88,7 +88,7 @@ class NewsController extends Controller
 
         $datas->each(function ($item) {
             $this->setPicture($item);
-        });
+        });        
 
         $tv_programs = $this->getTvProgram();
         $categories = $this->getCategories();
@@ -172,8 +172,8 @@ class NewsController extends Controller
 
     public function update(News $id)
     {
-        $data = request()->all();
-
+        $data = request()->all();   
+        
         // $id->update([
         //     News::NEWS_TITLE => $data['news_title'] ?? $id->news_title,
         //     News::NEWS_TRANSCRIPT => $data['news_transcript'] ?? $id->news_transcript,

@@ -229,7 +229,7 @@
                     borderWidth: 3,
                     fill: true,
                     data: categoryViews,
-                    maxBarThickness: 6,                    
+                    maxBarThickness: 6,
                 }],
             },
             options: {
@@ -243,9 +243,14 @@
                 interaction: {
                     intersect: false,
                     mode: 'index',
-                },                
+                    hover: {
+                        mode: 'nearest',
+                        animationDuration: 400
+                    },
+                },
             },
         });
+
 
 
         const ctx2 = document.getElementById("doughnutChart").getContext("2d");

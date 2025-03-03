@@ -153,7 +153,6 @@ class News extends Model
                     return $item;
                 }),
                 'categoryCountViews' => NewsCategory::categoryCountView(),
-                'cateAll' => NewsCategory::categoryCountNews(),
                 'newsCount' => self::getPublishedNewsCount(),
                 'aiNewsCount' => self::getAINewsCount(),
                 'pendingCount' => self::getAINewsPendingCount()
@@ -176,6 +175,7 @@ class News extends Model
         return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')->whereIn(News::NEWS_TYPE_ID, [1, 7])
             ->where('news.publish_status', 1)
             ->where('news.active', 1)
+            ->limit(100)
             ->count();
     }
 
@@ -186,6 +186,7 @@ class News extends Model
             ->where('news.publish_status', 1)
             ->where('news.active', 1)
             ->whereNotNull('news.ref_news_id')
+            ->limit(100)
             ->count();
     }
 
@@ -196,6 +197,7 @@ class News extends Model
             ->where('news.publish_status', 1)
             ->where('news.active', 1)
             ->whereNull('news.ref_news_id')
+            ->limit(100)
             ->count();
     }
 }

@@ -61,6 +61,7 @@ class NewsCategory extends Model
             })
             ->groupBy('category.category_id', 'category.category_name')
             ->orderByDesc('total_news_count')
+            ->limit(100)
             ->paginate(10);
     }
 }
