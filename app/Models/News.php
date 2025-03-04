@@ -58,7 +58,9 @@ class News extends Model
         'news_content_ai',
         'news_convert_mp3_status',
         'news_transcript',
+        'news_transcript_only',
         'news_convert_transcript_status',
+        'is_require_transcribe',
     ];
 
     const NEWS_ID = 'news_id'; // int(11) Auto Increment
@@ -110,7 +112,9 @@ class News extends Model
     const NEWS_CONTENT_AI = 'news_content_ai'; // text NULL
     const NEWS_CONVERT_MP3_STATUS = 'news_convert_mp3_status'; // varchar(30) NULL [wait]
     const NEWS_TRANSCRIPT = 'news_transcript'; // text NULL
+    const NEWS_TRANSCRIPT_ONLY = 'news_transcript_only'; // text NULL
     const NEWS_CONVERT_TRANSCRIPT_STATUS = 'news_convert_transcript_status'; // varchar(30) NULL [wait]    
+    const IS_REQUIRE_TRANSCRIBE = 'is_require_transcribe'; // tinyint(1)
 
     public $casts = [
         'news_date' => 'datetime',
@@ -138,10 +142,11 @@ class News extends Model
 
     public static function getData()
     {
-        return cache()->remember('getData', now()->addHours(1), function () {
+        // return cache()->remember('getData', now()->addHours(1), function () {
             $news = News::whereIn(News::NEWS_TYPE_ID, [1, 7])
                 ->where(News::PUBLISH_STATUS, 1)
                 ->where(News::ACTIVE, 1)
+                ->where(News::NEWS_DATE, '<=', '2015-01-01')
                 ->orderBy('news_count', 'desc')
                 ->limit(10)
                 ->get();
@@ -155,9 +160,10 @@ class News extends Model
                 'categoryCountViews' => NewsCategory::categoryCountView(),
                 'newsCount' => self::getPublishedNewsCount(),
                 'aiNewsCount' => self::getAINewsCount(),
-                'pendingCount' => self::getAINewsPendingCount()
+                'pendingCount' => self::getAINewsPendingCount(),
+                'categoryNewsCount' => NewsCategory::categoryCountNews()
             ];
-        });
+        // });
     }
 
     public function setPicture()
@@ -175,6 +181,7 @@ class News extends Model
         return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')->whereIn(News::NEWS_TYPE_ID, [1, 7])
             ->where('news.publish_status', 1)
             ->where('news.active', 1)
+            ->where('news.news_date', '<=', '2015-01-01')
             ->limit(100)
             ->count();
     }
@@ -186,6 +193,7 @@ class News extends Model
             ->where('news.publish_status', 1)
             ->where('news.active', 1)
             ->whereNotNull('news.ref_news_id')
+            ->where('news.news_date', '<=', '2015-01-01')
             ->limit(100)
             ->count();
     }
@@ -197,6 +205,7 @@ class News extends Model
             ->where('news.publish_status', 1)
             ->where('news.active', 1)
             ->whereNull('news.ref_news_id')
+            ->where('news.news_date', '<=', '2015-01-01')
             ->limit(100)
             ->count();
     }

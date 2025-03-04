@@ -150,29 +150,29 @@
                         @foreach ($datas as $data)
                             <div class="col-6 list-group-item border-0 d-flex flex-column flex-lg-row border-radius-lg">
                                 <div class="d-flex flex-column flex-lg-row align-items-lg-center">
-                                    <img style="width: 150px; height: 150px;" src="{{ asset($data->news->news_pic) }}"
-                                        alt="{{ $data->news->news_title }}" class="img-fluid me-3 image-picture">
+                                    <img style="width: 150px; height: 150px;" src="{{ asset($data->news_pic) }}"
+                                        alt="{{ $data->news_title }}" class="img-fluid me-3 image-picture">
                                     <div class="d-flex flex-column">
                                         <h6 class="text-sm text-truncate" style="max-width: 300px">                                          
-                                            {{ $data->news->news_title }}
+                                            {{ $data->news_title }}
                                         </h6>
                                         <span class="mb-2 text-xs">News ID: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news->news_id }}</span></span>
+                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news_id }}</span></span>
                                         <span class="mb-2 text-xs">TV Program: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news->tvProgram->program_name ?? '-' }}</span></span>
+                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->tvProgram->program_name ?? '-' }}</span></span>
                                         <span class="mb-2 text-xs">Category: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->TvCategory->category_name ?? '-' }}</span></span>
+                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->category_name ?? '-' }}</span></span>
                                         <span class="mb-2 text-xs">News Type: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news->newsType->news_type_name ?? '-' }}</span></span>
+                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->newsType->news_type_name ?? '-' }}</span></span>
                                         <span class="mb-2 text-xs">Created AT: <span
-                                                class="text-dark ms-sm-2 font-weight-bold">{{ $data->news->news_date->format('Y-m-d') }}
+                                                class="text-dark ms-sm-2 font-weight-bold">{{ $data->news_date->format('Y-m-d') }}
                                                 <span
-                                                    class="text-muted mx-1">({{ $data->news->news_date->diffForHumans() }})</span></span></span>
+                                                    class="text-muted mx-1">({{ $data->news_date->diffForHumans() }})</span></span></span>
                                     </div>
                                 </div>
                                 <div class="ms-auto text-end d-flex align-items-center">
                                     <a class="btn btn-link px-3 mb-0"
-                                        href="{{ route('news-detail', $data->news->news_id) }}"><i
+                                        href="{{ route('news-detail', $data->news_id) }}"><i
                                             class="fas fa-pencil-alt me-2" style="color: #ea3005"
                                             aria-hidden="true"></i>Edit</a>
                                 </div>

@@ -24,8 +24,7 @@ class NewsCategory extends Model
 
     public function news()
     {
-        return $this->belongsTo(News::class, self::NEWS_ID, 'news_id')
-            ->select('news_title', 'news_id', 'news_pic', 'news_date', 'news_type_id', 'program_id', 'video_id');
+        return $this->belongsTo(News::class, self::NEWS_ID, 'news_id');
     }
 
     public function TvCategory()
@@ -41,7 +40,8 @@ class NewsCategory extends Model
                 $join->on('c.news_id', '=', 'b.news_id')
                     ->whereIn('b.news_type_id', [1, 7])
                     ->where('b.publish_status', 1)
-                    ->where('b.active', 1);
+                    ->where('b.active', 1)
+                    ->where('b.news_date', '<=', '2015-01-01');
             })
             ->groupBy('category.category_id', 'category.category_name')
             ->orderByDesc('total_news_count')
@@ -57,11 +57,11 @@ class NewsCategory extends Model
                 $join->on('c.news_id', '=', 'b.news_id')
                     ->whereIn('b.news_type_id', [1, 7])
                     ->where('b.publish_status', 1)
+                    ->where('b.news_date', '<=', '2015-01-01')
                     ->where('b.active', 1);
             })
             ->groupBy('category.category_id', 'category.category_name')
-            ->orderByDesc('total_news_count')
-            ->limit(100)
-            ->paginate(10);
+            ->orderByDesc('total_news_count')            
+            ->get();
     }
 }

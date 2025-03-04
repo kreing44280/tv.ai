@@ -10,7 +10,6 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Footage News</p>
                                     <h5 class="font-weight-bolder">
                                         {{ number_format($newsCount) }}
                                     </h5>
@@ -40,7 +39,6 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Footage News</p>
                                     <h5 class="font-weight-bolder">
                                         {{ number_format($aiNewsCount) }}
                                     </h5>
@@ -70,7 +68,6 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Footage News</p>
                                     <h5 class="font-weight-bolder">
                                         {{ number_format($pendingCount) }}
                                     </h5>
@@ -100,7 +97,6 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Members</p>
                                     <h5 class="font-weight-bolder">
                                         {{ number_format($userCount) }}
                                     </h5>
@@ -197,12 +193,27 @@
                 </div>
             </div>
         </div>
+        <div class="row mt-4">
+            <div class="col-lg-12 mb-lg-0 mb-4">
+                <div class="card z-index-2 h-100">
+                    <div class="card-header pb-0 pt-3 bg-transparent">
+                        <h6 class="text-capitalize">Number of news in each category</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="chart">
+                            <canvas id="myBarChart" class="chart-canvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
 
 @push('js')
     <script src="./assets/js/plugins/chartjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
     <script>
         var ctx1 = document.getElementById("chart-line").getContext("2d");
 
@@ -223,7 +234,7 @@
                     label: "Views",
                     tension: 0.4,
                     borderWidth: 0,
-                    pointRadius: 0,
+                    pointRadius: 5, // กำหนดขนาดจุดให้มองเห็นชัดเจน
                     borderColor: "#fb6340",
                     backgroundColor: gradientStroke1,
                     borderWidth: 3,
@@ -238,20 +249,32 @@
                 plugins: {
                     legend: {
                         display: false,
+                    },
+                    tooltip: {
+                        enabled: false, // ปิด tooltip ที่ต้องโฮเวอร์
+                    },
+                    datalabels: {
+                        align: 'top', // ให้แสดงค่าด้านบนจุด
+                        anchor: 'end',
+                        color: '#333', // สีของตัวเลข
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        backgroundColor: 'rgba(128, 128, 128, 0.5)', // สีเทาพร้อม opacity
+                        formatter: function(value, context) {
+                            let formatter = new Intl.NumberFormat('th-TH');
+                            return formatter.format(value);
+                        }
                     }
                 },
                 interaction: {
                     intersect: false,
                     mode: 'index',
-                    hover: {
-                        mode: 'nearest',
-                        animationDuration: 400
-                    },
                 },
             },
+            plugins: [ChartDataLabels] // เพิ่ม plugin datalabels
         });
-
-
 
         const ctx2 = document.getElementById("doughnutChart").getContext("2d");
 
@@ -276,6 +299,77 @@
             type: 'doughnut',
             data: dataDoughnut,
             options: optionsDoughnut
+        });
+
+        const cateNewsNames = {!! json_encode($cateNewsNames) !!};
+        const cateNewsCount = {!! json_encode($cateNewsCount) !!};
+
+        const ctx = document.getElementById('myBarChart').getContext('2d');
+
+        const myBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: cateNewsNames,
+                datasets: [{
+                    label: 'Sales',
+                    data: cateNewsCount,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(153, 102, 255, 0.6)',
+                        'rgba(255, 159, 64, 0.6)',
+                        'rgba(244, 67, 54, 0.6)',
+                        'rgba(233, 30, 99, 0.6)',
+                        'rgba(156, 39, 176, 0.6)',
+                        'rgba(103, 58, 183, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(244, 67, 54, 1)',
+                        'rgba(233, 30, 99, 1)',
+                        'rgba(156, 39, 176, 1)',
+                        'rgba(103, 58, 183, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        enabled: false, // ปิด tooltip ที่ต้องโฮเวอร์
+                    },
+                    datalabels: {
+                        align: 'top', // ให้แสดงค่าด้านบนจุด
+                        anchor: 'end',
+                        color: '#333', // สีของตัวเลข
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        backgroundColor: 'rgba(128, 128, 128, 0.5)', // สีเทาพร้อม opacity
+                        formatter: function(value, context) {
+                            let formatter = new Intl.NumberFormat('th-TH');
+                            return formatter.format(value);
+                        }
+                    }
+                },
+            },plugins: [ChartDataLabels] // เพิ่ม plugin datalabels
         });
     </script>
 @endpush

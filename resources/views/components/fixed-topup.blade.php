@@ -1,4 +1,4 @@
-<div class="position-fixed bottom-0 end-0 p-3">
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 99">
     <div class="py-2 px-2 bg-danger text-white rounded cursor-pointer d-flex flex-column" id="fixed-topup">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-bar-up"
             viewBox="0 0 16 16">
