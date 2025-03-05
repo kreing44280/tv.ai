@@ -3,7 +3,7 @@
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand m-0" href="{{ route('dashboard') }}" target="_blank">
+        <a class="navbar-brand m-0" href="{{ route('dashboard') }}">
             <img src="{{ asset('img/logo-ct-dark.png') }}" class="navbar-brand-img h-100" alt="main_logo">
             <span class="ms-1 font-weight-bold">TV AI</span>
         </a>
@@ -37,20 +37,6 @@
                     <span class="nav-link-text ms-1">Archived News</span>                  
                 </a>              
             </li>
-            {{-- <li class="nav-item">
-                <a class="nav-link {{ str_contains(request()->url(), 'video-list') == true ? 'active' : '' }}"
-                    href="{{ route('video-list') }}">
-                    <div
-                        class="me-2 icon-shape icon-sm border-radius-md text-center d-flex align-items-center justify-content-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none"
-                            viewBox="0 0 24 24" stroke-width="1.5" stroke="#fb6340" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
-                        </svg>
-                    </div>
-                    <span class="nav-link-text ms-1">Video List</span>
-                </a>
-            </li> --}}
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Member</h6>
             </li>

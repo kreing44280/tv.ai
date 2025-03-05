@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class NewsCategory extends Model
 {
@@ -40,8 +39,7 @@ class NewsCategory extends Model
                 $join->on('c.news_id', '=', 'b.news_id')
                     ->whereIn('b.news_type_id', [1, 7])
                     ->where('b.publish_status', 1)
-                    ->where('b.active', 1)
-                    ->where('b.news_date', '<=', '2015-01-01');
+                    ->where('b.active', 1);                    
             })
             ->groupBy('category.category_id', 'category.category_name')
             ->orderByDesc('total_news_count')
@@ -56,8 +54,7 @@ class NewsCategory extends Model
             ->join('news as b', function ($join) {
                 $join->on('c.news_id', '=', 'b.news_id')
                     ->whereIn('b.news_type_id', [1, 7])
-                    ->where('b.publish_status', 1)
-                    ->where('b.news_date', '<=', '2015-01-01')
+                    ->where('b.publish_status', 1)                    
                     ->where('b.active', 1);
             })
             ->groupBy('category.category_id', 'category.category_name')

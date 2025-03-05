@@ -20,9 +20,8 @@ class NewsController extends Controller
                 ->join('category', 'news_category.category_id', '=', 'category.category_id')
                 ->where('news.publish_status', 1)
                 ->where('news.active', 1)
-                ->whereIn('news.news_type_id', [1, 7])
-                ->where('news.news_date', '<=', '2015-01-01')
-                ->paginate(10);                
+                ->whereIn('news.news_type_id', [1, 7])                
+                ->paginate(30);                
         });
 
         $tv_programs = $this->getTvProgram();
@@ -89,8 +88,7 @@ class NewsController extends Controller
 
         $datas->whereIn('news.news_type_id', [1, 7]);
         $datas->where('news.publish_status', 1);
-        $datas->where('news.active', 1);       
-        $datas->where('news.news_date', '<=', '2015-01-01');
+        $datas->where('news.active', 1);
         
         $datas = $datas->paginate(10)->appends(request()->query());
 
@@ -161,7 +159,7 @@ class NewsController extends Controller
                 ->whereIn('news.news_type_id', [1, 7])
                 ->where('news.publish_status', 1)
                 ->where('news.active', 1)
-                ->where('news.news_date', '<=', '2015-01-01')->count()
+                ->count()
         );
     }
 

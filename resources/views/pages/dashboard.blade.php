@@ -211,9 +211,7 @@
 @endsection
 
 
-@push('js')
-    <script src="./assets/js/plugins/chartjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+@push('js')    
     <script>
         var ctx1 = document.getElementById("chart-line").getContext("2d");
 
