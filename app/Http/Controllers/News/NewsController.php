@@ -13,28 +13,30 @@ class NewsController extends Controller
     public function index()
     {
         $datas = cache()->remember('news_data_page_' . request('page', 1), now()->addMinutes(10), function () {
-            return News::select('news.news_id', 'news.news_title', 'news.news_date', 'news.news_permalink',
-             'category.category_name', 'news.news_pic', 'news.news_type_id', 'news.program_id')
+            return News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
+             category.category_name, news.news_pic, news.news_type_id, news.program_id,
+             TIME_FORMAT(TIMEDIFF(video_position_end, video_position_start), "%H:%i:%s") as video_duration')
                 ->with('tvProgram', 'newsType')
                 ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
                 ->join('category', 'news_category.category_id', '=', 'category.category_id')
                 ->where('news.publish_status', 1)
                 ->where('news.active', 1)
-                ->whereIn('news.news_type_id', [1, 7])                
-                ->paginate(30);                
+                ->whereIn('news.news_type_id', [1, 7])
+                ->paginate(30);
         });
 
         $tv_programs = $this->getTvProgram();
         $categories = $this->getCategories();
         $sumNewsContent = $this->sumNewsContent();
         $news_count = $this->newsCount();
+        $videoDuration = $this->videoDuration();
 
         // Apply the setPicture logic
         $datas->each(function ($item) {
             $this->setPicture($item);
         });
 
-        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent'));
+        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent', 'videoDuration'));
     }
 
     public function search()
@@ -60,16 +62,17 @@ class NewsController extends Controller
         }
 
         // ถ้า URL ถูกต้องแล้ว ให้ดำเนินการค้นหาต่อ
-        $datas = News::select('news.news_id', 'news.news_title', 'news.news_date', 'news.news_permalink',
-        'category.category_name', 'news.news_pic', 'news.news_type_id', 'news.program_id')
-           ->with('tvProgram', 'newsType')
+        $datas = News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
+        category.category_name, news.news_pic, news.news_type_id, news.program_id,
+        TIME_FORMAT(TIMEDIFF(video_position_end, video_position_start), "%H:%i:%s") as video_duration')
+            ->with('tvProgram', 'newsType')
             ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
             ->join('category', 'news_category.category_id', '=', 'category.category_id')
             ->where(function ($query) use ($filteredParams) {
                 if (isset($filteredParams['newsName'])) {
                     $query->where(function ($q) use ($filteredParams) {
                         $q->where('news.news_id', $filteredParams['newsName'])
-                            ->orWhere('news_title', 'like', '%' . $filteredParams['newsName'] . '%');                            
+                            ->orWhere('news_title', 'like', '%' . $filteredParams['newsName'] . '%');
                     });
                 }
             });
@@ -89,10 +92,10 @@ class NewsController extends Controller
         $datas->whereIn('news.news_type_id', [1, 7]);
         $datas->where('news.publish_status', 1);
         $datas->where('news.active', 1);
-        
+
         $datas = $datas->paginate(10)->appends(request()->query());
 
-      
+
         $datas->each(function ($item) {
             $this->setPicture($item);
         });
@@ -101,8 +104,9 @@ class NewsController extends Controller
         $categories = $this->getCategories();
         $sumNewsContent = $this->sumNewsContent();
         $news_count = $this->newsCount();
+        $videoDuration = $this->videoDuration();
 
-        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent'));
+        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent', 'videoDuration'));
     }
 
 
@@ -119,9 +123,13 @@ class NewsController extends Controller
 
     public function show($id)
     {
+        return $this->showDetail($id);
+    }
+
+    private function showDetail($id)
+    {
         $datas = NewsCategory::with(['TvCategory', 'news'])->whereHas('news', function ($query) use ($id) {
             $query->where('news_id', $id);
-            $query->where('news_date', '<=', '2015-01-01');
         })->first();
 
         $folder = $datas->news->tvProgram->program_permalink;
@@ -134,27 +142,40 @@ class NewsController extends Controller
             $news_date = $datas->news->news_date->format('Y-m-d');
         }
 
-        //480
-        $videoUrl = "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_480.mp4";
+        $videoUrl = $this->getVideoUrl($folder, $news_date, $news_id);
 
-        $videoUrl_720 = "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_720.mp4";
-
-        $videoUrl_new = file_exists(public_path($videoUrl))
-            ? $videoUrl
-            : (file_exists(public_path($videoUrl_720))
-                ? $videoUrl_720
-                : "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4");
-
-        $datas->news->video_url = $videoUrl_new;
+        $datas->news->video_url = $videoUrl;
 
         $datas->news->news_content = strip_tags(html_entity_decode($datas->news->news_content));
 
         return view('pages.news-detail', compact('datas'));
     }
 
+    private function getVideoUrl($folder, $news_date, $news_id)
+    {
+        $videoUrls = [
+            "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_480.mp4",
+            "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_720.mp4",
+            "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4"
+        ];
+
+        $foundUrl = null;
+        foreach ($videoUrls as $videoUrl) {
+            if (@get_headers($videoUrl)[0] == 'HTTP/1.1 200 OK') {
+                $foundUrl = $videoUrl;
+                break;
+            }
+        }
+
+        return $foundUrl;
+    }
+
     private function newsCount()
     {
-        return cache()->remember('newsCount', now()->addHours(1), fn() =>
+        return cache()->remember(
+            'newsCount',
+            now()->addHours(1),
+            fn() =>
             News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
                 ->whereIn('news.news_type_id', [1, 7])
                 ->where('news.publish_status', 1)
@@ -178,6 +199,16 @@ class NewsController extends Controller
         return cache()->remember('category', now()->addHours(1), fn() => TvCategory::all());
     }
 
+    private function videoDuration()
+    {
+        return cache()->remember('videoDuration', now()->addMinutes(10), function () {
+            return News::selectRaw('TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(video_position_end, video_position_start)))), "%H:%i:%s") as video_duration')
+                ->where([['news.publish_status', 1], ['news.active', 1]])
+                ->whereIn('news.news_type_id', [1, 7])
+                ->value('video_duration');
+        });
+    }
+
     public function update(News $id)
     {
         $data = request()->all();
@@ -189,5 +220,88 @@ class NewsController extends Controller
         // ]);
 
         return redirect()->route('news-detail', $id->news_id);
+    }
+
+    public function checkVideo()
+    {
+        // $datas = News::selectRaw('news.news_id, news.news_date, news.news_permalink,
+        //     video_id, news.news_type_id, news.program_id')
+        //     ->with('tvProgram', 'newsType', 'videoMaster')
+        //     ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
+        //     ->join('category', 'news_category.category_id', '=', 'category.category_id')
+        //     ->where('news.publish_status', 1)
+        //     ->where('news.active', 1)
+        //     ->whereIn('news.news_type_id', [1, 7])
+        //     ->get();  
+
+        // $array = $datas->filter(function ($item) {
+        //     $folder = $item->tvProgram->program_permalink;
+        //     $news_date = $item->news_type_id == 1 ? $item->videoMaster->video_date : $item->news_date->format('Y-m-d');
+        //     $news_id = $item->news_id;
+
+        //     $videoUrls = [
+        //         "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_480.mp4",
+        //         "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_720.mp4",
+        //         "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4"
+        //     ];
+
+        //     foreach ($videoUrls as $videoUrl) {
+        //         if (@get_headers($videoUrl)[0] == 'HTTP/1.1 200 OK') {
+        //             return true;
+        //         }
+        //     }
+        //     return false;
+        // });
+
+        // dd($datas->count(), $array->count());
+
+
+        $array = [];
+
+        $datas = News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
+            video_id,
+            category.category_name, news.news_pic, news.news_type_id, news.program_id,
+            TIME_FORMAT(TIMEDIFF(video_position_end, video_position_start), "%H:%i:%s") as video_duration')
+            ->with(['tvProgram', 'newsType', 'videoMaster'])
+            ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
+            ->join('category', 'news_category.category_id', '=', 'category.category_id')
+            ->where('news.publish_status', 1)
+            ->where('news.active', 1)
+            ->whereIn('news.news_type_id', [1, 7])
+            ->limit(10)
+            ->cursor();
+
+        foreach ($datas as $item) {
+            $folder = $item->tvProgram->program_permalink;
+            $news_type_id = $item->news_type_id;
+
+            if ($news_type_id == 1) {
+                $news_date = $item->videoMaster->video_date;
+            } else {
+                $news_date = $item->news_date->format('Y-m-d');
+            }
+
+            $news_id = $item->news_id;
+
+            $videoUrls = [
+                "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_480.mp4",
+                "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_720.mp4",
+                "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4"
+            ];
+
+            $foundUrl = null;
+            foreach ($videoUrls as $videoUrl) {
+                if (@get_headers($videoUrl)[0] == 'HTTP/1.1 200 OK') {
+                    $foundUrl = $videoUrl;
+                    break;
+                }
+            }
+
+            if ($foundUrl) {
+                $array[] = $item;
+            }
+        }
+
+        dd($array);
     }
 }

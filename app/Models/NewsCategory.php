@@ -44,6 +44,7 @@ class NewsCategory extends Model
             ->groupBy('category.category_id', 'category.category_name')
             ->orderByDesc('total_news_count')
             ->limit(10)
+            ->having('total_news_count', '>', 0)
             ->get();
     }
 
@@ -58,7 +59,9 @@ class NewsCategory extends Model
                     ->where('b.active', 1);
             })
             ->groupBy('category.category_id', 'category.category_name')
-            ->orderByDesc('total_news_count')            
+            ->orderByDesc('total_news_count')                        
+            ->limit(10)
+            ->having('total_news_count', '>', 0)
             ->get();
     }
 }

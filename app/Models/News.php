@@ -162,6 +162,7 @@ class News extends Model
                 'pendingCount' => self::getAINewsPendingCount(),
                 'categoryNewsCount' => NewsCategory::categoryCountNews()
             ];
+
         });
     }
 
