@@ -39,6 +39,7 @@ class NewsCategory extends Model
                 $join->on('c.news_id', '=', 'b.news_id')
                     ->whereIn('b.news_type_id', [1, 7])
                     ->where('b.publish_status', 1)
+                    ->where('b.is_video_exist', 1)
                     ->where('b.active', 1);                    
             })
             ->groupBy('category.category_id', 'category.category_name')
@@ -55,7 +56,8 @@ class NewsCategory extends Model
             ->join('news as b', function ($join) {
                 $join->on('c.news_id', '=', 'b.news_id')
                     ->whereIn('b.news_type_id', [1, 7])
-                    ->where('b.publish_status', 1)                    
+                    ->where('b.publish_status', 1) 
+                    ->where('b.is_video_exist', 1)            
                     ->where('b.active', 1);
             })
             ->groupBy('category.category_id', 'category.category_name')

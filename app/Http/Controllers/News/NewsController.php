@@ -7,6 +7,7 @@ use App\Models\News;
 use App\Models\NewsCategory;
 use App\Models\TvCategory;
 use App\Models\TvProgram;
+use Illuminate\Support\Facades\Http;
 
 class NewsController extends Controller
 {
@@ -15,12 +16,13 @@ class NewsController extends Controller
         $datas = cache()->remember('news_data_page_' . request('page', 1), now()->addMinutes(10), function () {
             return News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
              category.category_name, news.news_pic, news.news_type_id, news.program_id,
-             TIME_FORMAT(TIMEDIFF(video_position_end, video_position_start), "%H:%i:%s") as video_duration')
+             TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(news_duration))), "%H:%i:%s") as video_duration')
                 ->with('tvProgram', 'newsType')
                 ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
                 ->join('category', 'news_category.category_id', '=', 'category.category_id')
                 ->where('news.publish_status', 1)
                 ->where('news.active', 1)
+                ->where('news.is_video_exist', 1)
                 ->whereIn('news.news_type_id', [1, 7])
                 ->paginate(30);
         });
@@ -64,7 +66,7 @@ class NewsController extends Controller
         // ถ้า URL ถูกต้องแล้ว ให้ดำเนินการค้นหาต่อ
         $datas = News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
         category.category_name, news.news_pic, news.news_type_id, news.program_id,
-        TIME_FORMAT(TIMEDIFF(video_position_end, video_position_start), "%H:%i:%s") as video_duration')
+        TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(news_duration))), "%H:%i:%s") as video_duration')
             ->with('tvProgram', 'newsType')
             ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
             ->join('category', 'news_category.category_id', '=', 'category.category_id')
@@ -91,6 +93,7 @@ class NewsController extends Controller
 
         $datas->whereIn('news.news_type_id', [1, 7]);
         $datas->where('news.publish_status', 1);
+        $datas->where('news.is_video_exist', 1);
         $datas->where('news.active', 1);
 
         $datas = $datas->paginate(10)->appends(request()->query());
@@ -153,21 +156,12 @@ class NewsController extends Controller
 
     private function getVideoUrl($folder, $news_date, $news_id)
     {
-        $videoUrls = [
-            "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_480.mp4",
-            "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_720.mp4",
-            "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4"
-        ];
+        $base_url = "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id";
+        $urls = ["{$base_url}_480.mp4", "{$base_url}_720.mp4", "{$base_url}.mp4"];
 
-        $foundUrl = null;
-        foreach ($videoUrls as $videoUrl) {
-            if (@get_headers($videoUrl)[0] == 'HTTP/1.1 200 OK') {
-                $foundUrl = $videoUrl;
-                break;
-            }
+        if ($this->checkUrlStatus($urls) != 404) {
+            return $this->checkUrlStatus($urls);
         }
-
-        return $foundUrl;
     }
 
     private function newsCount()
@@ -180,13 +174,14 @@ class NewsController extends Controller
                 ->whereIn('news.news_type_id', [1, 7])
                 ->where('news.publish_status', 1)
                 ->where('news.active', 1)
+                ->where('news.is_video_exist', 1)
                 ->count()
         );
     }
 
     private function sumNewsContent()
     {
-        return cache()->remember('sumNewsContent', now()->addHours(1), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->where('news_date', '<=', '2015-01-01')->sum('news_content_count'));
+        return cache()->remember('sumNewsContent', now()->addHours(1), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->where('news.is_video_exist', 1)->sum('news_content_count'));
     }
 
     private function getTvProgram()
@@ -202,9 +197,10 @@ class NewsController extends Controller
     private function videoDuration()
     {
         return cache()->remember('videoDuration', now()->addMinutes(10), function () {
-            return News::selectRaw('TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(video_position_end, video_position_start)))), "%H:%i:%s") as video_duration')
+            return News::selectRaw('TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(news_duration))), "%H:%i:%s") as video_duration')
                 ->where([['news.publish_status', 1], ['news.active', 1]])
                 ->whereIn('news.news_type_id', [1, 7])
+                ->where('news.is_video_exist', 1)
                 ->value('video_duration');
         });
     }
@@ -222,86 +218,20 @@ class NewsController extends Controller
         return redirect()->route('news-detail', $id->news_id);
     }
 
-    public function checkVideo()
+    public function checkUrlStatus(array $urls)
     {
-        // $datas = News::selectRaw('news.news_id, news.news_date, news.news_permalink,
-        //     video_id, news.news_type_id, news.program_id')
-        //     ->with('tvProgram', 'newsType', 'videoMaster')
-        //     ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
-        //     ->join('category', 'news_category.category_id', '=', 'category.category_id')
-        //     ->where('news.publish_status', 1)
-        //     ->where('news.active', 1)
-        //     ->whereIn('news.news_type_id', [1, 7])
-        //     ->get();  
+        foreach ($urls as $url) {
 
-        // $array = $datas->filter(function ($item) {
-        //     $folder = $item->tvProgram->program_permalink;
-        //     $news_date = $item->news_type_id == 1 ? $item->videoMaster->video_date : $item->news_date->format('Y-m-d');
-        //     $news_id = $item->news_id;
+            try {
+                $response = Http::head($url);
 
-        //     $videoUrls = [
-        //         "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_480.mp4",
-        //         "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_720.mp4",
-        //         "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4"
-        //     ];
-
-        //     foreach ($videoUrls as $videoUrl) {
-        //         if (@get_headers($videoUrl)[0] == 'HTTP/1.1 200 OK') {
-        //             return true;
-        //         }
-        //     }
-        //     return false;
-        // });
-
-        // dd($datas->count(), $array->count());
-
-
-        $array = [];
-
-        $datas = News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
-            video_id,
-            category.category_name, news.news_pic, news.news_type_id, news.program_id,
-            TIME_FORMAT(TIMEDIFF(video_position_end, video_position_start), "%H:%i:%s") as video_duration')
-            ->with(['tvProgram', 'newsType', 'videoMaster'])
-            ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
-            ->join('category', 'news_category.category_id', '=', 'category.category_id')
-            ->where('news.publish_status', 1)
-            ->where('news.active', 1)
-            ->whereIn('news.news_type_id', [1, 7])
-            ->limit(10)
-            ->cursor();
-
-        foreach ($datas as $item) {
-            $folder = $item->tvProgram->program_permalink;
-            $news_type_id = $item->news_type_id;
-
-            if ($news_type_id == 1) {
-                $news_date = $item->videoMaster->video_date;
-            } else {
-                $news_date = $item->news_date->format('Y-m-d');
-            }
-
-            $news_id = $item->news_id;
-
-            $videoUrls = [
-                "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_480.mp4",
-                "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . "_720.mp4",
-                "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id" . ".mp4"
-            ];
-
-            $foundUrl = null;
-            foreach ($videoUrls as $videoUrl) {
-                if (@get_headers($videoUrl)[0] == 'HTTP/1.1 200 OK') {
-                    $foundUrl = $videoUrl;
-                    break;
+                if ($response->successful()) {
+                    return $url;
                 }
-            }
-
-            if ($foundUrl) {
-                $array[] = $item;
+            } catch (\Throwable $th) {
+                //
             }
         }
-
-        dd($array);
+        return 404;
     }
 }

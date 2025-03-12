@@ -61,6 +61,8 @@ class News extends Model
         'news_transcript_only',
         'news_convert_transcript_status',
         'is_require_transcribe',
+        'news_duration',
+        'is_video_exist'
     ];
 
     const NEWS_ID = 'news_id'; // int(11) Auto Increment
@@ -115,6 +117,9 @@ class News extends Model
     const NEWS_TRANSCRIPT_ONLY = 'news_transcript_only'; // text NULL
     const NEWS_CONVERT_TRANSCRIPT_STATUS = 'news_convert_transcript_status'; // varchar(30) NULL [wait]    
     const IS_REQUIRE_TRANSCRIBE = 'is_require_transcribe'; // tinyint(1)
+    const IS_VIDEO_EXIST = 'is_video_exist';
+    const NEWS_DURATION = 'news_duration';
+
 
     public $casts = [
         'news_date' => 'datetime',
@@ -145,7 +150,8 @@ class News extends Model
         return cache()->remember('getData', now()->addHours(1), function () {
             $news = News::whereIn(News::NEWS_TYPE_ID, [1, 7])
                 ->where(News::PUBLISH_STATUS, 1)
-                ->where(News::ACTIVE, 1)                
+                ->where(News::ACTIVE, 1)       
+                ->where('is_video_exist', 1)  
                 ->orderBy('news_count', 'desc')
                 ->limit(10)
                 ->get();
@@ -178,9 +184,11 @@ class News extends Model
 
     private static function getPublishedNewsCount()
     {
-        return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')->whereIn(News::NEWS_TYPE_ID, [1, 7])
+        return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
+        ->whereIn(News::NEWS_TYPE_ID, [1, 7])
             ->where('news.publish_status', 1)
-            ->where('news.active', 1)                        
+            ->where('news.active', 1)                   
+            ->where('news.is_video_exist', 1)     
             ->count();
     }
 
@@ -190,6 +198,7 @@ class News extends Model
             ->whereIn('news.news_type_id', [1, 7])
             ->where('news.publish_status', 1)
             ->where('news.active', 1)
+            ->where('news.is_video_exist', 1)
             ->whereNotNull('news.ref_news_id')                        
             ->count();
     }
@@ -200,6 +209,7 @@ class News extends Model
             ->whereIn('news.news_type_id', [1, 7])
             ->where('news.publish_status', 1)
             ->where('news.active', 1)
+            ->where('news.is_video_exist', 1)
             ->whereNull('news.ref_news_id')                        
             ->count();
     }
