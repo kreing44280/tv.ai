@@ -24,6 +24,8 @@ class NewsController extends Controller
                 ->where('news.active', 1)
                 ->where('news.is_video_exist', 1)
                 ->whereIn('news.news_type_id', [1, 7])
+                ->groupByRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
+                category.category_name, news.news_pic, news.news_type_id, news.program_id')
                 ->paginate(30);
         });
 
@@ -94,6 +96,8 @@ class NewsController extends Controller
         $datas->whereIn('news.news_type_id', [1, 7]);
         $datas->where('news.publish_status', 1);
         $datas->where('news.is_video_exist', 1);
+        $datas->groupByRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
+                category.category_name, news.news_pic, news.news_type_id, news.program_id');
         $datas->where('news.active', 1);
 
         $datas = $datas->paginate(10)->appends(request()->query());
@@ -147,7 +151,14 @@ class NewsController extends Controller
 
         $videoUrl = $this->getVideoUrl($folder, $news_date, $news_id);
 
-        $datas->news->video_url = $videoUrl;
+        $datas->news->video_url = $videoUrl;         
+
+        $seconds = $datas->news->news_duration;
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+        $secs = $seconds % 60;
+
+        $datas->news->news_duration = sprintf("%02d:%02d:%02d", $hours, $minutes, $secs);
 
         $datas->news->news_content = strip_tags(html_entity_decode($datas->news->news_content));
 

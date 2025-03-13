@@ -126,7 +126,7 @@ class News extends Model
         'publish_date' => 'datetime',
         'publish_start' => 'datetime',
         'post_date' => 'datetime',
-        'update_date' => 'datetime'
+        'update_date' => 'datetime',
     ];
 
 
