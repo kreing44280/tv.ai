@@ -144,7 +144,6 @@
 
         <script>
             document.getElementById('copyTextAI').addEventListener('click', function() {
-                console.log('test');
                 const news_title_ai = document.getElementById('news_title_ai').value;
                 const news_content_ai = document.getElementById('news_content_ai').value;
                 document.getElementById('news_title').value = news_title_ai;

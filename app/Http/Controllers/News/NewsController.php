@@ -5,6 +5,7 @@ namespace App\Http\Controllers\News;
 use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\NewsCategory;
+use App\Models\TeroNews;
 use App\Models\TvCategory;
 use App\Models\TvProgram;
 use Illuminate\Support\Facades\Http;
@@ -13,10 +14,10 @@ class NewsController extends Controller
 {
     public function index()
     {
-        $datas = cache()->remember('news_data_page_' . request('page', 1), now()->addMinutes(10), function () {
+        $datas = cache()->remember('news_data_page_' . request('page', 1), now()->addHours(1), function () {
             return News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
-             category.category_name, news.news_pic, news.news_type_id, news.program_id,
-             TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(news_duration))), "%H:%i:%s") as video_duration')
+            category.category_name, news.news_pic, news.news_type_id, news.program_id,
+            TIME_FORMAT(SEC_TO_TIME(news.news_duration), "%H:%i:%s") as video_duration')
                 ->with('tvProgram', 'newsType')
                 ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
                 ->join('category', 'news_category.category_id', '=', 'category.category_id')
@@ -24,8 +25,6 @@ class NewsController extends Controller
                 ->where('news.active', 1)
                 ->where('news.is_video_exist', 1)
                 ->whereIn('news.news_type_id', [1, 7])
-                ->groupByRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
-                category.category_name, news.news_pic, news.news_type_id, news.program_id')
                 ->paginate(30);
         });
 
@@ -41,6 +40,24 @@ class NewsController extends Controller
         });
 
         return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent', 'videoDuration'));
+    }
+
+    public function teroNews()
+    {
+        $datas = TeroNews::selectRaw('news_tero.news_id, news_tero.news_title, news_tero.news_date, news_tero.news_permalink,
+            category.category_name, news_tero.news_pic, news_tero.news_type_id, news_tero.program_id')
+            ->with('tvProgram', 'newsType')
+            ->join('news_category', 'news_tero.news_id', '=', 'news_category.news_id')
+            ->join('category', 'news_category.category_id', '=', 'category.category_id')
+            ->where('news_tero.publish_status', 1)
+            ->where('news_tero.active', 1)
+            ->whereIn('news_tero.news_type_id', [1, 7])
+            ->paginate(30);
+        $datas->each(function ($item) {
+            $this->setPicture($item);
+        });
+
+        return view('pages.tero-news', compact('datas'));
     }
 
     public function search()
@@ -68,7 +85,7 @@ class NewsController extends Controller
         // ถ้า URL ถูกต้องแล้ว ให้ดำเนินการค้นหาต่อ
         $datas = News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
         category.category_name, news.news_pic, news.news_type_id, news.program_id,
-        TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(news_duration))), "%H:%i:%s") as video_duration')
+        TIME_FORMAT(SEC_TO_TIME(news.news_duration), "%H:%i:%s") as video_duration')
             ->with('tvProgram', 'newsType')
             ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
             ->join('category', 'news_category.category_id', '=', 'category.category_id')
@@ -96,8 +113,6 @@ class NewsController extends Controller
         $datas->whereIn('news.news_type_id', [1, 7]);
         $datas->where('news.publish_status', 1);
         $datas->where('news.is_video_exist', 1);
-        $datas->groupByRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
-                category.category_name, news.news_pic, news.news_type_id, news.program_id');
         $datas->where('news.active', 1);
 
         $datas = $datas->paginate(10)->appends(request()->query());
@@ -118,7 +133,7 @@ class NewsController extends Controller
 
 
 
-    private function setPicture(News $item)
+    private function setPicture($item)
     {
         $image = $item->news_pic;
         $imagePath = 'https://backend.teroasia.com/uploads/pic_news/mid_' . $image;
@@ -151,7 +166,7 @@ class NewsController extends Controller
 
         $videoUrl = $this->getVideoUrl($folder, $news_date, $news_id);
 
-        $datas->news->video_url = $videoUrl;         
+        $datas->news->video_url = $videoUrl;
 
         $seconds = $datas->news->news_duration;
         $hours = floor($seconds / 3600);
@@ -207,12 +222,20 @@ class NewsController extends Controller
 
     private function videoDuration()
     {
-        return cache()->remember('videoDuration', now()->addMinutes(10), function () {
-            return News::selectRaw('TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(news_duration))), "%H:%i:%s") as video_duration')
-                ->where([['news.publish_status', 1], ['news.active', 1]])
+        return cache()->remember('videoDuration', now()->addHours(1), function () {
+            $sum = News::selectRaw('SUM(news_duration) as sum_news_duration')
+                ->where('news.publish_status', 1)
                 ->whereIn('news.news_type_id', [1, 7])
                 ->where('news.is_video_exist', 1)
-                ->value('video_duration');
+                ->where('news.active', 1)
+                ->first();
+
+            $seconds = $sum->sum_news_duration;
+            $hours = floor($seconds / 3600);
+            $minutes = floor(($seconds % 3600) / 60);
+            $secs = $seconds % 60;
+
+            return sprintf("%02d:%02d:%02d", $hours, $minutes, $secs);
         });
     }
 

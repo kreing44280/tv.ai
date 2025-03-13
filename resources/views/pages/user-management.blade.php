@@ -19,9 +19,6 @@
                                     <th
                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         Create Date</th>
-                                    <th
-                                        class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,12 +40,6 @@
                                         </td>
                                         <td class="align-middle text-center text-sm">
                                             <p class="text-sm font-weight-bold mb-0">{{ $user->created_at }}</p>
-                                        </td>
-                                        <td class="align-middle text-end">
-                                            <div class="d-flex px-3 py-1 justify-content-center align-items-center">
-                                                <p class="text-sm font-weight-bold mb-0">Edit</p>
-                                                <p class="text-sm font-weight-bold mb-0 ps-2">Delete</p>
-                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
