@@ -116,65 +116,58 @@
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-lg-7 mb-lg-0 mb-4">
+            <div class="col-lg-6 mb-lg-0 mb-4">
                 <div class="card z-index-2 h-100">
                     <div class="card-header pb-0 pt-3 bg-transparent">
-                        <h6 class="text-capitalize">Top news</h6>
+                        <h6 class="text-capitalize">News</h6>
                     </div>
                     <div class="card-body p-1 relative">
-                        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-inner border-radius-lg">
-                                @foreach ($populars as $popular)
-                                    <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                                        <img width="680" height="364" src="{{ asset($popular->news_pic) }}"
-                                            alt="{{ $popular->news_title }}"
-                                            class="w-100 border-radius-lg shadow-sm object-contain">
-                                        <div class="carousel-caption d-none d-md-block bottom-3 text-start start-0 ms-5"
-                                            style="background: rgba(0,0,0,0.5); border-radius: 10px; padding: 10px;">
-                                            <h5 class="text-white mb-1" style="text-shadow: 2px 2px black">
-                                                {{ $popular->news_title }}</h5>
-                                        </div>
-                                    </div>
-                                @endforeach
-                                <button class="carousel-control-prev w-5 me-3" type="button"
-                                    data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next w-5 me-3" type="button"
-                                    data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
-                            </div>
+                        <div class="chart">
+                            <canvas id="chart-polarArea" class="chart-canvas" height="300"></canvas>
                         </div>
+                        <ul class="list-group list-group-flush p-3">
+                            <li class="border-0 d-flex gap-3">
+                                <span class="text-sm" style="color: purple;">Tero News: </span>
+                                <span class="text-sm font-weight-bolder" style="color: purple;">
+                                    {{ number_format($teroNewsCount) }}
+                                </span>
+                            </li>
+                            <li class="border-0 d-flex gap-3">
+                                <span class="text-sm text-info">Archived News: </span>
+                                <span class="text-sm font-weight-bolder text-info">
+                                    {{ number_format($archivedNewsCount) }}
+                                </span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5 mb-lg-0 mb-4">
-                <div class="card z-index-2 h-100 d-flex align-items-center justify-content-center">
+            <div class="col-lg-6 mb-lg-0 mb-4">
+                <div class="card z-index-2 h-100">
                     <div class="card-body p-1 relative">
-                        <div class="chart pb-4">
+                        <div class="chart pb-4 d-flex justify-content-center">
                             <canvas id="doughnutChart" class="chart-canvas"></canvas>
                         </div>
-                        <div class="d-flex gap-2">
-                            <p class="mb-0 text-sm text-primary">จํานวนข่าวทั้งหมด: </p>
-                            <h5 class="mb-0 text-sm font-weight-bolder text-primary">
-                                {{ number_format($newsCount) }}
-                            </h5>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <p class="mb-0 text-sm text-info">จํานวนข่าวที่กรอกโดย AI: </p>
-                            <h5 class="mb-0 text-sm font-weight-bolder text-info">
-                                {{ number_format($aiNewsCount) }}
-                            </h5>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <p class="mb-0 text-sm text-success">จํานวนข่าวที่ยังไม่ได้กรอก: </p>
-                            <h5 class="mb-0 text-sm font-weight-bolder text-success">
-                                {{ number_format($pendingCount) }}
-                            </h5>
-                        </div>
+                        <ul class="list-group list-group-flush p-3">
+                            <li class="border-0 d-flex gap-3">
+                                <span class="text-sm text-primary">จํานวนข่าวทั้งหมด: </span>
+                                <span class="text-sm font-weight-bolder text-primary">
+                                    {{ number_format($newsCount) }}
+                                </span>
+                            </li>
+                            <li class="border-0 d-flex gap-3">
+                                <span class="text-sm text-info">จํานวนข่าวที่กรอกโดย AI: </span>
+                                <span class="text-sm font-weight-bolder text-info">
+                                    {{ number_format($aiNewsCount) }}
+                                </span>
+                            </li>
+                            <li class="border-0 d-flex gap-3">
+                                <span class="text-sm text-success">จํานวนข่าวที่ยังไม่ได้กรอก: </span>
+                                <span class="text-sm font-weight-bolder text-success">
+                                    {{ number_format($pendingCount) }}
+                                </span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -183,7 +176,7 @@
             <div class="col-lg-12 mb-lg-0 mb-4">
                 <div class="card z-index-2 h-100">
                     <div class="card-header pb-0 pt-3 bg-transparent">
-                        <h6 class="text-capitalize">Rating</h6>
+                        <h6 class="text-capitalize">Rating of Archived News</h6>
                     </div>
                     <div class="card-body p-3">
                         <div class="chart">
@@ -201,7 +194,7 @@
                     </div>
                     <div class="card-body p-3">
                         <div class="chart">
-                            <canvas id="myBarChart" class="chart-canvas"></canvas>
+                            <canvas id="myBarChart" class="chart-canvas" height="100"></canvas>
                         </div>
                     </div>
                 </div>
@@ -211,8 +204,45 @@
 @endsection
 
 
-@push('js')    
+@push('js')
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById("chart-polarArea").getContext("2d");
+
+            const data = {
+                labels: ["Archived News", "Tero News"],
+                datasets: [{
+                    label: "Dataset",
+                    data: [{{ $archivedNewsCount }}, {{ $teroNewsCount }}],
+                    backgroundColor: [
+                        "rgba(75, 192, 192, 0.6)",
+                        "rgba(153, 102, 255, 0.6)"
+                    ],
+                    borderColor: [
+                        "rgba(75, 192, 192, 1)",
+                        "rgba(153, 102, 255, 1)"
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            const config = {
+                type: "polarArea",
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "top",
+                        }
+                    }
+                }
+            };
+
+            new Chart(ctx, config);
+        });
+
         var ctx1 = document.getElementById("chart-line").getContext("2d");
 
         var gradientStroke1 = ctx1.createLinearGradient(0, 230, 0, 50);
@@ -367,7 +397,8 @@
                         }
                     }
                 },
-            },plugins: [ChartDataLabels] // เพิ่ม plugin datalabels
+            },
+            plugins: [ChartDataLabels] // เพิ่ม plugin datalabels
         });
     </script>
 @endpush

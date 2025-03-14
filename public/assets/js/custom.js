@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
 const tagInput = document.getElementById('tagInput');
 const tagInputField = document.getElementById('tagInputField');
 const hiddenInput = document.getElementById('news_tags');
-const initialTags = hiddenInput.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+const initialTags = hiddenInput ? hiddenInput.value.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
 
 // Populate initial tags
 initialTags.forEach(addTag);
@@ -51,27 +51,28 @@ function updateHiddenInput() {
 }
 
 // Handle input field events
-tagInputField.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
-        addTag(tagInputField.value);
-        tagInputField.value = '';
-    }
-});
+if (tagInputField) {
+    tagInputField.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            addTag(tagInputField.value);
+            tagInputField.value = '';
+        }
+    });
+    tagInputField.addEventListener('blur', () => {
+        if (tagInputField.value.trim()) {
+            addTag(tagInputField.value);
+            tagInputField.value = '';
+        }
+    });
+}
 
-// Prevent empty tags on blur
-tagInputField.addEventListener('blur', () => {
-    if (tagInputField.value.trim()) {
-        addTag(tagInputField.value);
-        tagInputField.value = '';
-    }
-});
 
 // if (document.getElementById('tagInputHuman')) {
 const tagInputHuman = document.getElementById('tagInputHuman');
 const tagInputFieldHuman = document.getElementById('tagInputFieldHuman');
 const hiddenInputHuman = document.getElementById('news_tag_human');
-const initialTagsHuman = hiddenInputHuman.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+const initialTagsHuman = hiddenInputHuman ? hiddenInputHuman.value.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
 
 // Populate initial tags
 initialTagsHuman.forEach(addTagHuman);
@@ -112,19 +113,21 @@ function updateHiddenInputHuman() {
 }
 
 // Handle input field events
-tagInputFieldHuman.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
-        addTagHuman(tagInputFieldHuman.value);
-        tagInputFieldHuman.value = '';
-    }
-});
+if (tagInputFieldHuman) {
+    tagInputFieldHuman.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            addTagHuman(tagInputFieldHuman.value);
+            tagInputFieldHuman.value = '';
+        }
+    });
 
-// Prevent empty tags on blur
-tagInputFieldHuman.addEventListener('blur', () => {
-    if (tagInputFieldHuman.value.trim()) {
-        addTagHuman(tagInputFieldHuman.value);
-        tagInputFieldHuman.value = '';
-    }
-});
+    // Prevent empty tags on blur
+    tagInputFieldHuman.addEventListener('blur', () => {
+        if (tagInputFieldHuman.value.trim()) {
+            addTagHuman(tagInputFieldHuman.value);
+            tagInputFieldHuman.value = '';
+        }
+    });
+}
 // }

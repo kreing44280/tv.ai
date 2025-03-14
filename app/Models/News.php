@@ -147,23 +147,13 @@ class News extends Model
 
     public static function getData()
     {
-        return cache()->remember('getData', now()->addHours(1), function () {
-            $news = News::whereIn(News::NEWS_TYPE_ID, [1, 7])
-                ->where(News::PUBLISH_STATUS, 1)
-                ->where(News::ACTIVE, 1)       
-                ->where('is_video_exist', 1)  
-                ->orderBy('news_count', 'desc')
-                ->limit(10)
-                ->get();
-
-            return [
-                'popular' => $news->map(function ($item) {
-                    $item->setPicture();
-
-                    return $item;
-                }),
+        return cache()->remember('getData', now()->addHours(1), function () {  
+            $array = self::getPublishedNewsCount();  
+            return [            
                 'categoryCountViews' => NewsCategory::categoryCountView(),
-                'newsCount' => self::getPublishedNewsCount(),
+                'newsCount' => $array['total'],
+                'archivedNewsCount' => $array['archived_news'],
+                'teroNewsCount' => $array['tero_news'],
                 'aiNewsCount' => self::getAINewsCount(),
                 'pendingCount' => self::getAINewsPendingCount(),
                 'categoryNewsCount' => NewsCategory::categoryCountNews()
@@ -184,12 +174,17 @@ class News extends Model
 
     private static function getPublishedNewsCount()
     {
-        return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
+        $archived_news = News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
         ->whereIn(News::NEWS_TYPE_ID, [1, 7])
             ->where('news.publish_status', 1)
             ->where('news.active', 1)                   
             ->where('news.is_video_exist', 1)     
             ->count();
+
+        $tero_news = TeroNews::whereIn(TeroNews::NEWS_TYPE_ID, [1, 7])->where(TeroNews::PUBLISH_STATUS, 1)->where(TeroNews::ACTIVE, 1)->count();
+
+        return array('archived_news' => $archived_news, 'tero_news' =>  $tero_news, 'total' => $archived_news + $tero_news);
+
     }
 
     private static function getAINewsCount()
