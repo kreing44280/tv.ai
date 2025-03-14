@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\News\NewsController;
+use App\Http\Controllers\News\TeroNewsController;
 use App\Http\Controllers\Video\VideoController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,8 +26,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/video/{id}/update', [VideoController::class, 'update'])->name('video.update');
     Route::get('/members', [UserController::class, 'members'])->name('members');
     Route::get('/news', [NewsController::class, 'index'])->name('news');
-    Route::get('/tero-news', [NewsController::class, 'teroNews'])->name('tero_news');
     Route::get('/news/search', [NewsController::class, 'search'])->name('news.search');
+    Route::get('/tero-news', [TeroNewsController::class, 'index'])->name('tero_news');
+    Route::get('/tero-news/search', [TeroNewsController::class, 'search'])->name('tero-news.search');
     Route::get('/news/{id}/detail', [NewsController::class, 'show'])->name('news-detail');
+    Route::get('/tero-news/{id}/detail', [TeroNewsController::class, 'show'])->name('tero-news-detail');
     Route::post('/news/{id}/update', [NewsController::class, 'update'])->name('news.update');
 });

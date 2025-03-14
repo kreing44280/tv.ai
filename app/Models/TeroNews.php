@@ -89,6 +89,7 @@ class TeroNews extends Model
         'publish_start' => 'datetime:Y-m-d H:i:s',
         'post_date' => 'datetime:Y-m-d H:i:s',
         'update_date' => 'datetime:Y-m-d H:i:s',
+        'news_date' => 'datetime',
     ];
 
     const NEWS_ID = 'news_id';
@@ -177,5 +178,32 @@ class TeroNews extends Model
     public function videoMaster()
     {
         return $this->belongsTo(VideoMaster::class, self::VIDEO_ID, 'video_id')->select('video_name', 'video_id', 'video_date');
+    }
+
+    public static function newsCount()
+    {
+        return cache()->remember(
+            'newsCountTero',
+            now()->addHours(1),
+            fn() =>
+            TeroNews::whereIn('news_type_id', [1, 7])
+                ->where('publish_status', 1)
+                ->where('active', 1)
+                ->count()
+        );
+    }
+
+    public static function sumNewsContent()
+    {
+        // return cache()->remember(
+        //     'sumNewsContentTero',
+        //     now()->addHours(1),
+        //     fn() =>
+        //     TeroNews::whereIn('news_type_id', [1, 7])
+        //         ->where('publish_status', 1)
+        //         ->where('active', 1)
+        //         ->where('is_video_exist', 1)
+        //         ->sum('news_content_count')
+        // );
     }
 }

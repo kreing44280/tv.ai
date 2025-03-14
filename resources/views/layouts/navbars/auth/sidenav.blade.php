@@ -47,7 +47,7 @@
                 </a>
                 <ul class="list-unstyled ms-3 d-none" id="pagesDropdown">
                     <li>
-                        <a class="nav-link pl-6 {{ Route::currentRouteName() == 'news' ? 'active' : '' }}"
+                        <a class="nav-link pl-6 {{ Route::currentRouteName() == 'news' || Route::currentRouteName() == 'news-detail' ? 'active' : '' }}"
                             href="{{ route('news') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-newspaper mx-3" viewBox="0 0 16 16">
@@ -60,7 +60,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link pl-6 {{ Route::currentRouteName() == 'tero_news' ? 'active' : '' }}"
+                        <a class="nav-link pl-6 {{ Route::currentRouteName() == 'tero_news' || Route::currentRouteName() == "tero-news-detail" ? 'active' : '' }}"
                             href="{{ route('tero_news') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-newspaper mx-3" viewBox="0 0 16 16">
@@ -106,7 +106,8 @@
     </div>
     <script>
         var currentRouteName = `{{ Route::currentRouteName() }}`; 
-        if (currentRouteName == 'news' || currentRouteName == 'tero_news') {
+        console.log(currentRouteName);
+        if (currentRouteName == 'news' || currentRouteName == 'tero_news' || currentRouteName == "tero-news-detail" || currentRouteName == "news-detail") {
             var pagesDropdown = document.getElementById('pagesDropdown');
             pagesDropdown.classList.remove('d-none');
         }

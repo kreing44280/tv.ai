@@ -31,7 +31,7 @@
 <div class="container-fluid py-4">
     <div class="row">
         <div class="card">
-            <form role="form" method="POST" action={{ route('profile.update') }} enctype="multipart/form-data">
+            <form role="form" method="POST" enctype="multipart/form-data">
                 @csrf               
                 <div class="card-body">
                     <p class="text-uppercase text-sm">User Information</p>

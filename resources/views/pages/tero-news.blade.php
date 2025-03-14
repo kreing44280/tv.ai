@@ -24,7 +24,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">All News</p>
                                     <h5 class="font-weight-bolder">
-                                        {{-- {{ number_format($news_count) }} --}}
+                                        {{ number_format($news_count) }}
                                     </h5>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Count Content</p>
                                     <h5 class="font-weight-bolder">
-                                        {{-- {{ number_format($sumNewsContent) }} --}}
+                                        0
                                     </h5>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@
                                 <div class="numbers">
                                     <p class="text-sm mb-0 text-uppercase font-weight-bold">Video Duration</p>
                                     <h5 class="font-weight-bolder">
-                                        {{-- {{ $videoDuration }} --}}
+                                        0
                                     </h5>
                                 </div>
                             </div>
@@ -128,7 +128,7 @@
         <div class="row">
             <div class="card p-0">
                 <div class="card-body pt-4">
-                    <form action="{{ route('news.search') }}" method="get">
+                    <form action="{{ route('tero-news.search') }}" method="get">
                         <div class="row grid-cols-2">
                             <div class="col d-flex flex-column align-items-start">
                                 <label for="startDate" class="form-label me-2">Start Date</label>
@@ -140,28 +140,28 @@
                                 <input type="date" class="form-control" id="endDate" name="endDate"
                                     value="{{ request('endDate') }}">
                             </div>
-                            <div class="col d-flex flex-column align-items-start">
+                            {{-- <div class="col d-flex flex-column align-items-start">
                                 <label for="category" class="form-label me-2">Category</label>
                                 <select name="category" id="category" class="form-select">
                                     <option value="">All</option>
-                                    {{-- @foreach ($categories as $category)
+                                    @foreach ($categories as $category)
                                         <option value="{{ $category->category_id }}"
                                             {{ request('category') == $category->category_id ? 'selected' : '' }}>
                                             {{ $category->category_name }}
                                         </option>
-                                    @endforeach --}}
+                                    @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                             <div class="col d-flex flex-column align-items-start">
                                 <label for="tv_program" class="form-label me-2">TV Program</label>
                                 <select name="tv_program" id="tv_program" class="form-select">
                                     <option value="">All</option>
-                                    {{-- @foreach ($tv_programs as $tv_program)
+                                    @foreach ($tv_programs as $tv_program)
                                         <option value="{{ $tv_program->program_id }}"
                                             {{ request('tv_program') == $tv_program->program_id ? 'selected' : '' }}>
                                             {{ $tv_program->program_name }}
                                         </option>
-                                    @endforeach --}}
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -174,7 +174,7 @@
                             <div class="col d-flex gap-2">
                                 <button type="submit" class="btn btn-primary" style="margin-top: 2.5rem"
                                     id="searchButton">Search</button>
-                                <a href="{{ route('news') }}" class="btn btn-secondary"
+                                <a href="{{ route('tero_news') }}" class="btn btn-secondary"
                                     style="margin-top: 2.5rem">Reset</a>
                             </div>
                         </div>
@@ -194,25 +194,24 @@
                                         <span class="mb-2 text-xs">TV Program: <span
                                                 class="text-dark font-weight-bold ms-sm-2">{{ $data->tvProgram->program_name ?? '-' }}</span></span>
                                         <span class="mb-2 text-xs">Category: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->category_name ?? '-' }}</span></span>
+                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news_line_category ?? '-' }}</span></span>
                                         <span class="mb-2 text-xs">News Type: <span
                                                 class="text-dark font-weight-bold ms-sm-2">{{ $data->newsType->news_type_name ?? '-' }}</span></span>
                                         <span class="mb-2 text-xs">Video Duration: <span
                                                 class="text-dark font-weight-bold ms-sm-2">
-                                                {{-- {{ $data->video_duration ?? '-' }} --}}
+                                                {{ $data->video_duration ?? '-' }}
                                             </span></span>
                                         <span class="mb-2 text-xs">Created AT: <span
                                                 class="text-dark ms-sm-2 font-weight-bold">
-                                                {{-- {{ $data->news_date->format('Y-m-d') }} --}}
-                                                <span
-                                                    class="text-muted mx-1">
-                                                    {{-- ({{ $data->news_date->diffForHumans() }}) --}}
+                                                {{ $data->news_date->format('Y-m-d') }}
+                                                <span class="text-muted mx-1">
+                                                    ({{ $data->news_date->diffForHumans() }})
                                                 </span></span></span>
                                     </div>
                                 </div>
                                 <div class="ms-auto text-end d-flex align-items-center">
                                     <a class="btn btn-link px-3 mb-0"
-                                        href="{{ route('news-detail', $data->news_id) }}"><i
+                                        href="{{ route('tero-news-detail', $data->news_id) }}"><i
                                             class="fas fa-pencil-alt me-2" style="color: #ea3005"
                                             aria-hidden="true"></i>Edit</a>
                                 </div>
