@@ -45,9 +45,9 @@
                         </svg>
                     </div>
                 </a>
-                <ul class="list-unstyled ms-3 d-none" id="pagesDropdown">
+                <ul class="list-unstyled ms-3" id="pagesDropdown">
                     <li>
-                        <a class="nav-link pl-6 {{ Route::currentRouteName() == 'news' || Route::currentRouteName() == 'news-detail' ? 'active' : '' }}"
+                        <a class="nav-link pl-6 {{ Route::currentRouteName() == 'news' || Route::currentRouteName() == 'news-detail' || Route::currentRouteName() == 'news.search' ? 'active' : '' }}"
                             href="{{ route('news') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-newspaper mx-3" viewBox="0 0 16 16">
@@ -60,7 +60,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link pl-6 {{ Route::currentRouteName() == 'tero_news' || Route::currentRouteName() == "tero-news-detail" ? 'active' : '' }}"
+                        <a class="nav-link pl-6 {{ Route::currentRouteName() == 'tero_news' || Route::currentRouteName() == "tero-news-detail" || Route::currentRouteName() == "tero-news.search" ? 'active' : '' }}"
                             href="{{ route('tero_news') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-newspaper mx-3" viewBox="0 0 16 16">
@@ -105,20 +105,16 @@
         </ul>
     </div>
     <script>
-        var currentRouteName = `{{ Route::currentRouteName() }}`; 
-        console.log(currentRouteName);
-        if (currentRouteName == 'news' || currentRouteName == 'tero_news' || currentRouteName == "tero-news-detail" || currentRouteName == "news-detail") {
-            var pagesDropdown = document.getElementById('pagesDropdown');
+        const currentRouteName = `{{ Route::currentRouteName() }}`;
+        const isNewsRoute = ['news', 'tero_news', 'tero-news-detail', 'news-detail', 'news-create', 'tero-news.search', 'news.search'].includes(currentRouteName);
+        const pagesDropdown = document.getElementById('pagesDropdown');
+
+        if (isNewsRoute) {
             pagesDropdown.classList.remove('d-none');
         }
 
-        document.getElementById('dropdownMenuPages').addEventListener('click', function() {
-            var pagesDropdown = document.getElementById('pagesDropdown');
-            if (pagesDropdown.classList.contains('d-none')) {
-                pagesDropdown.classList.remove('d-none');
-            } else {
-                pagesDropdown.classList.add('d-none');
-            }
+        document.getElementById('dropdownMenuPages').addEventListener('click', () => {
+            pagesDropdown.classList.toggle('d-none');
         });
     </script>
 </aside>

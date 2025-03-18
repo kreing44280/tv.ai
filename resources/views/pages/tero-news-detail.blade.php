@@ -2,6 +2,8 @@
 
 @section('content')
     @include('layouts.navbars.auth.topnav', ['title' => 'Video Detail'])
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <div class="container-fluid py-4">
 
         <div class="row">
@@ -11,7 +13,8 @@
                         <button type="button" class="btn btn-secondary" onclick="history.back()">back</button>
                     </div>
                     <div class="card-body overflow-auto pb-0">
-                        <form action="{{ route('news.update', ['id' => $datas->news_id]) }}" method="post" class="needs-validation" novalidate>
+                        <form action="{{ route('news.update', ['id' => $datas->news_id]) }}" method="post"
+                            class="needs-validation" novalidate>
                             @csrf
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
@@ -86,7 +89,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="news_content" class="form-label">News Content</label>
-                                        <textarea name="news_content" class="form-control" id="news_content" name="news_content" cols="30" rows="10">{{ $datas->news_content }}</textarea>
+                                        <textarea name="news_content" class="form-control" id="news_content" cols="30" rows="10">{{ $datas->news_content }}</textarea>
                                     </div>
                                     <div class="mb-3">
                                         <button type="button" class="btn btn-primary" id="copyTextAI">Copy text
@@ -102,7 +105,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="news_content_ai" class="form-label">News Content AI</label>
-                                        <textarea name="news_content_ai" class="form-control" id="news_content_ai" cols="30" rows="10">{{ $datas->news_content_ai }}</textarea>
+                                        <textarea name="news_content_ai" class="form-control" id="news_content_ai" cols="30" rows="6">{{ $datas->news_content_ai }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +117,7 @@
                                 <div class="col-12 col-md-6">
                                     <label for="seo_keyword" class="form-label">SEO Keyword</label>
                                     <textarea name="seo_keyword" class="form-control" id="seo_keyword" cols="30" rows="6">{{ $datas->seo_keyword }}</textarea>
-                                </div>                                
+                                </div>
                             </div>
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
@@ -130,7 +133,7 @@
                                         <textarea name="news_transcript_only" class="form-control" id="news_transcript_only" name="news_transcript_only"
                                             cols="30" rows="15">{{ $datas->news_transcript_only }}</textarea>
                                     </div>
-                                </div>                         
+                                </div>
                             </div>
                             <div class="mb-3 text-center pt-3">
                                 <button type="submit" class="btn btn-primary">Save</button>
@@ -141,20 +144,27 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            document.getElementById('copyTextAI').addEventListener('click', function() {
-                const news_title_ai = document.getElementById('news_title_ai').value;
-                const news_content_ai = document.getElementById('news_content_ai').value;
-                document.getElementById('news_title').value = news_title_ai;
-                document.getElementById('news_content').value = news_content_ai;
-            });
-
-            document.getElementById('copyTextAICancel').addEventListener('click', function() {
-                document.getElementById('news_title').value = {{ $datas->news_title }};
-                document.getElementById('news_content').value = {{ $datas->news_content }};
-            });
-        </script>
-
     </div>
+
+
+
+    <script>
+        var quill = new Quill('#news_content_ai', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    [{
+                        'list': 'ordered'
+                    }, {
+                        'list': 'bullet'
+                    }],
+                    [{
+                        'align': []
+                    }],
+                    ['link', 'image']
+                ]
+            }
+        });
+    </script>
 @endsection

@@ -41,7 +41,7 @@
             ]))
             @yield('content')
         @else
-        <div class="min-height-300 bg-primary position-absolute w-100"></div>
+            <div class="min-height-300 bg-primary position-absolute w-100"></div>
             <div class="position-absolute w-100 min-height-300 top-0 bg-cover"
                 style="background-image: url({{ asset('img/bg-ai4.jpg') }}); background-position: center center;">
                 <span class="mask bg-gradient-dark opacity-6"></span>
@@ -69,19 +69,6 @@
     <script src="{{ asset('assets/js/custom.js') }}"></script>
     <script src="./assets/js/plugins/chartjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-    <script>
-        var win = navigator.platform.indexOf('Win') > -1;
-        if (win && document.querySelector('#sidenav-scrollbar')) {
-            var options = {
-                damping: '0.5'
-            }
-            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-        }
-    </script>
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="{{ asset('assets/js/argon-dashboard.js') }}"></script>
     @stack('js')
 </body>
 

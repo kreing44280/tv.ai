@@ -5,7 +5,6 @@ namespace App\Http\Controllers\News;
 use App\Http\Controllers\Controller;
 use App\Models\TeroNews;
 use App\Models\TvProgram;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class TeroNewsController extends Controller

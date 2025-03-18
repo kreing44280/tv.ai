@@ -15,7 +15,6 @@ Route::POST('/login-perform', [LoginController::class, 'store'])->name('login.pe
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::POST('/register-perform', [RegisterController::class, 'store'])->name('register.perform');
 Route::POST('/logout', [LoginController::class, 'destroy'])->name('logout');
-Route::get('/test', [NewsController::class, 'index'])->name('test');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'index'])->name('profile');
@@ -25,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/video/{filename}', [VideoController::class, 'stream'])->name('video.stream');
     Route::post('/video/{id}/update', [VideoController::class, 'update'])->name('video.update');
     Route::get('/members', [UserController::class, 'members'])->name('members');
+    Route::post('/members/create', [UserController::class, 'store'])->name('members.store');
     Route::get('/news', [NewsController::class, 'index'])->name('news');
     Route::get('/news/search', [NewsController::class, 'search'])->name('news.search');
     Route::get('/tero-news', [TeroNewsController::class, 'index'])->name('tero_news');
