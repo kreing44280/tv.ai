@@ -39,7 +39,7 @@ class NewsController extends Controller
         });
 
         return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent', 'videoDuration'));
-    }  
+    }
 
     public function search()
     {
@@ -204,19 +204,20 @@ class NewsController extends Controller
     private function videoDuration()
     {
         return cache()->remember('videoDuration', now()->addHours(1), function () {
-            $sum = News::selectRaw('SUM(news_duration) as sum_news_duration')
-                ->where('news.publish_status', 1)
+            $sum = News::where('news.publish_status', 1)
                 ->whereIn('news.news_type_id', [1, 7])
                 ->where('news.is_video_exist', 1)
                 ->where('news.active', 1)
-                ->first();
+                ->sum('news_duration');
 
-            $seconds = $sum->sum_news_duration;
+            $seconds = $sum;
             $hours = floor($seconds / 3600);
             $minutes = floor(($seconds % 3600) / 60);
-            $secs = $seconds % 60;
 
-            return sprintf("%02d:%02d:%02d", $hours, $minutes, $secs);
+            $h = number_format($hours);
+            $m = number_format($minutes);
+
+            return $h . " ชม. " . $m . " น.";
         });
     }
 

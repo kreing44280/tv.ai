@@ -19,10 +19,10 @@
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
                                     <div class="form-group mb-3">
-                                        <video controls class="w-100">
+                                        {{-- <video controls class="w-100">
                                             <source src="{{ $datas->video_url }}" type="video/mp4">
                                             Your browser does not support the video tag.
-                                        </video>
+                                        </video> --}}
                                     </div>
                                     <div class="mb-1">
                                         <label class="form-label">News convert mp3 status</label>

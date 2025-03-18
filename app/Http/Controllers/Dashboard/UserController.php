@@ -48,4 +48,17 @@ class UserController extends Controller
 
         return redirect()->route('members')->with('success', 'User registered successfully.');
     }
+
+    public function show (){
+        $new_arr = [];
+        $user = User::with('UserRoles')->find(request()->user_id);       
+        if ($user->UserRoles) {
+            $new_arr = [
+                'user_name' => $user->user_name,
+                'email' => $user->email,
+                'role_id' => $user->UserRoles->roles[0]->role_id
+            ];
+        }
+        return $new_arr;
+    }
 }
