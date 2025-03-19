@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsCategory extends Model
 {
-    protected $connection = 'mysql2';
+    
     protected $table = 'news_category';
 
     protected $fillable = [

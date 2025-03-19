@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsType extends Model
 {
-    protected $connection = 'mysql2';
+    
     protected $table = 'news_type';
 
     protected $casts = [

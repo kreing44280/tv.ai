@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TeroNews extends Model
 {
-    protected $connection = 'mysql2';
+    
     protected $table = 'news_tero';
 
     protected $primaryKey = 'news_id';
