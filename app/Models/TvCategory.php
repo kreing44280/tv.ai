@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TvCategory extends Model
 {
-    
+    protected $connection = 'mysql2';
     protected $table = 'category';
 
     protected $primaryKey = 'category_id';

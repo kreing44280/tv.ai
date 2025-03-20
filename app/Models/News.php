@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class News extends Model
 {
-    
+    protected $connection = 'mysql2';
     protected $table = 'news';
     protected $primaryKey = 'news_id';
 

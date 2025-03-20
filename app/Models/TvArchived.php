@@ -7,7 +7,6 @@ use App\Models\TvCategory;
 
 class TvArchived extends Model
 {
-    
     protected $table = 'archived_news';
 
     protected $fillable = [

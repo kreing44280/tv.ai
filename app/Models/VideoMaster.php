@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class VideoMaster extends Model
 {
-    
+    protected $connection = 'mysql2';
+
     protected $table = 'video_master';
 
     protected $fillable = [
