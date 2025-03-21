@@ -15,4 +15,6 @@ Schedule::call(function () {
     app(Kernel::class)->sumNewsContent();
     app(Kernel::class)->newsCount();
     app(Kernel::class)->videoDuration();   
+    app(Kernel::class)->archiveNews();   
+    app(Kernel::class)->teroNews();   
 })->everyMinute();

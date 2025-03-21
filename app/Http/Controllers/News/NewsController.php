@@ -193,12 +193,12 @@ class NewsController extends Controller
 
     private function getTvProgram()
     {
-        return cache()->remember('tvProgram', now()->addHours(1), fn() => TvProgram::all());
+        return cache()->remember('tvProgram', now()->addDay(), fn() => TvProgram::all());
     }
 
     private function getCategories()
     {
-        return cache()->remember('category', now()->addHours(1), fn() => TvCategory::all());
+        return cache()->remember('category', now()->addDay(), fn() => TvCategory::all());
     }
 
     private function videoDuration()

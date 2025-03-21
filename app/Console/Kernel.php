@@ -110,4 +110,34 @@ class Kernel extends BaseKernel
             return $h . " ชม. " . $m . " น.";
         });
     }
+
+    public function archiveNews()
+    {
+        cache()->remember('news_data_page_' . request('page', 1), now()->addMinutes(20), function () {
+            return News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
+            category.category_name, news.news_pic, news.news_type_id, news.program_id,
+            TIME_FORMAT(SEC_TO_TIME(news.news_duration), "%H:%i:%s") as video_duration')
+                ->with('tvProgram', 'newsType')
+                ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
+                ->join('category', 'news_category.category_id', '=', 'category.category_id')
+                ->where('news.publish_status', 1)
+                ->where('news.active', 1)
+                ->where('news.is_video_exist', 1)
+                ->whereIn('news.news_type_id', [1, 7])
+                ->paginate(30);
+        });
+    }
+
+    public function teroNews()
+    {
+        cache()->remember('teroNewsPaginated_' . request('page', 1), now()->addMinutes(20), function () {
+            return TeroNews::selectRaw('news_tero.news_id, news_tero.news_title, news_tero.news_date, news_tero.news_permalink,
+                news_tero.news_pic, news_tero.news_type_id, news_tero.program_id, news_tero.news_line_category')
+                ->with('tvProgram', 'newsType')
+                ->where('news_tero.publish_status', 1)
+                ->where('news_tero.active', 1)
+                ->whereIn('news_tero.news_type_id', [1, 7])
+                ->paginate(30);
+        });
+    }
 }

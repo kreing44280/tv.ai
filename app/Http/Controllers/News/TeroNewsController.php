@@ -11,7 +11,7 @@ class TeroNewsController extends Controller
 {
     public function index()
     {
-        $datas = cache()->remember('teroNewsPaginated', now()->addMinutes(10), function () {
+        $datas = cache()->remember('teroNewsPaginated_' . request('page', 1), now()->addHours(1), function () {
             return TeroNews::selectRaw('news_tero.news_id, news_tero.news_title, news_tero.news_date, news_tero.news_permalink,
                 news_tero.news_pic, news_tero.news_type_id, news_tero.program_id, news_tero.news_line_category')
                 ->with('tvProgram', 'newsType')
@@ -42,7 +42,7 @@ class TeroNewsController extends Controller
 
     private function getTvProgram()
     {
-        return cache()->remember('tvProgram', now()->addHours(1), fn() => TvProgram::all());
+        return cache()->remember('tvProgram', now()->addDay(), fn() => TvProgram::all());
     }
 
     public function search()
