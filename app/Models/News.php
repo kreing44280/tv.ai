@@ -152,7 +152,7 @@ class News extends Model
 
     public static function getData()
     {
-        return cache()->remember('getData', now()->addHours(1), function () {  
+        return cache()->remember('dashboardData', now()->addHours(1), function () {  
             $array = self::getPublishedNewsCount();  
             return [            
                 'categoryCountViews' => NewsCategory::categoryCountView(),
