@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsCategory extends Model
 {
-    protected $connection = 'mysql2';
+    protected $connection;
+
+    public function __construct()
+    {
+        $this->connection = env('APP_ENV') === 'local' ? 'mysql2' : 'mysql';
+    }
     protected $table = 'news_category';
 
     protected $fillable = [
