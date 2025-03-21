@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class TeroNews extends Model
 {
@@ -187,15 +188,16 @@ class TeroNews extends Model
 
     public static function newsCount()
     {
-        return cache()->remember(
-            'newsCountTero',
-            now()->addHours(1),
-            fn() =>
-            TeroNews::whereIn('news_type_id', [1, 7])
+        $datas = Cache::get('newsCountTero');
+        if (is_null($datas)) {            
+            Cache::put('newsCountTero', TeroNews::whereIn('news_type_id', [1, 7])
                 ->where('publish_status', 1)
                 ->where('active', 1)
-                ->count()
-        );
+                ->count(), now()->addHours(1));
+            $datas = Cache::get('newsCountTero');
+        }
+
+        return $datas;
     }
 
     public static function sumNewsContent()

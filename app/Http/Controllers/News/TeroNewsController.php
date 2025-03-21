@@ -5,21 +5,27 @@ namespace App\Http\Controllers\News;
 use App\Http\Controllers\Controller;
 use App\Models\TeroNews;
 use App\Models\TvProgram;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class TeroNewsController extends Controller
 {
     public function index()
     {
-        $datas = cache()->remember('teroNewsPaginated_' . request('page', 1), now()->addHours(1), function () {
-            return TeroNews::selectRaw('news_tero.news_id, news_tero.news_title, news_tero.news_date, news_tero.news_permalink,
+        $page = request('page', 1);
+        $datas = Cache::get('news_data_page_' . $page);
+        if(is_null($datas)) {
+            Cache::put('news_data_page_' . request('page', 1), TeroNews::selectRaw('news_tero.news_id, news_tero.news_title, news_tero.news_date, news_tero.news_permalink,
                 news_tero.news_pic, news_tero.news_type_id, news_tero.program_id, news_tero.news_line_category')
                 ->with('tvProgram', 'newsType')
                 ->where('news_tero.publish_status', 1)
                 ->where('news_tero.active', 1)
                 ->whereIn('news_tero.news_type_id', [1, 7])
-                ->paginate(30);
-        });
+                ->paginate(30), now()->addHours(1));
+
+            $datas = Cache::get('news_data_page_' . $page);
+        }
+               
         $datas->each(function ($item) {
             $this->setPicture($item);
         });
@@ -41,8 +47,14 @@ class TeroNewsController extends Controller
     }
 
     private function getTvProgram()
-    {
-        return cache()->remember('tvProgram', now()->addDay(), fn() => TvProgram::all());
+    {        
+        $data = Cache::get('tvProgram');
+        if (is_null($data)) {            
+            Cache::put('tvProgram', TvProgram::all(), now()->addDay());
+            $data = Cache::get('tvProgram');
+        }
+
+        return $data;
     }
 
     public function search()

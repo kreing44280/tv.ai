@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class News extends Model
 {
@@ -152,19 +153,21 @@ class News extends Model
 
     public static function getData()
     {
-        return cache()->remember('dashboardData', now()->addHours(1), function () {  
-            $array = self::getPublishedNewsCount();  
-            return [            
+        $data = Cache::get('dashboardData');
+        if (is_null($data)) {            
+            Cache::put('dashboardData', [
                 'categoryCountViews' => NewsCategory::categoryCountView(),
-                'newsCount' => $array['total'],
-                'archivedNewsCount' => $array['archived_news'],
-                'teroNewsCount' => $array['tero_news'],
+                'newsCount' => self::getPublishedNewsCount()['total'],
+                'archivedNewsCount' => self::getPublishedNewsCount()['archived_news'],
+                'teroNewsCount' => self::getPublishedNewsCount()['tero_news'],
                 'aiNewsCount' => self::getAINewsCount(),
                 'pendingCount' => self::getAINewsPendingCount(),
                 'categoryNewsCount' => NewsCategory::categoryCountNews()
-            ];
+            ], now()->addHours(1));
+            $data = Cache::get('dashboardData');
+        }
 
-        });
+        return $data;
     }
 
     public function setPicture()

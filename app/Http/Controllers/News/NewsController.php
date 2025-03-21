@@ -7,16 +7,19 @@ use App\Models\News;
 use App\Models\NewsCategory;
 use App\Models\TvCategory;
 use App\Models\TvProgram;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class NewsController extends Controller
 {
     public function index()
     {
-        $datas = cache()->remember('news_data_page_' . request('page', 1), now()->addHours(1), function () {
-            return News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
-            category.category_name, news.news_pic, news.news_type_id, news.program_id,
-            TIME_FORMAT(SEC_TO_TIME(news.news_duration), "%H:%i:%s") as video_duration')
+        $page = request('page', 1);
+        $datas = Cache::get('news_data_page_' . $page);
+        if (is_null($datas)) {
+            Cache::put('news_data_page_' . request('page', 1), News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
+                category.category_name, news.news_pic, news.news_type_id, news.program_id,
+                TIME_FORMAT(SEC_TO_TIME(news.news_duration), "%H:%i:%s") as video_duration')
                 ->with('tvProgram', 'newsType')
                 ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
                 ->join('category', 'news_category.category_id', '=', 'category.category_id')
@@ -24,8 +27,10 @@ class NewsController extends Controller
                 ->where('news.active', 1)
                 ->where('news.is_video_exist', 1)
                 ->whereIn('news.news_type_id', [1, 7])
-                ->paginate(30);
-        });
+                ->paginate(30), now()->addHours(1));
+
+            $datas = Cache::get('news_data_page_' . $page);
+        }
 
         $tv_programs = $this->getTvProgram();
         $categories = $this->getCategories();
@@ -35,7 +40,9 @@ class NewsController extends Controller
 
         // Apply the setPicture logic
         $datas->each(function ($item) {
-            $this->setPicture($item);
+            if (!empty($item->news_pic)) {
+                $this->setPicture($item);
+            }
         });
 
         return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent', 'videoDuration'));
@@ -173,42 +180,62 @@ class NewsController extends Controller
 
     private function newsCount()
     {
-        return cache()->remember(
-            'newsCount',
-            now()->addHours(1),
-            fn() =>
-            News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
+        $data = Cache::get('newsCount');
+        if (is_null($data)) {
+            Cache::put('newsCount', News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
                 ->whereIn('news.news_type_id', [1, 7])
                 ->where('news.publish_status', 1)
                 ->where('news.active', 1)
                 ->where('news.is_video_exist', 1)
-                ->count()
-        );
+                ->count(), now()->addHours(1));
+            $data = Cache::get('newsCount');
+        }
+
+        return $data;
     }
 
     private function sumNewsContent()
     {
-        return cache()->remember('sumNewsContent', now()->addHours(1), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->where('news.is_video_exist', 1)->sum('news_content_count'));
+        $data = Cache::get('sumNewsContent');
+        if (is_null($data)) {
+            Cache::put('sumNewsContent', News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->where('news.is_video_exist', 1)->sum('news_content_count'), now()->addHours(1));
+            $data = Cache::get('sumNewsContent');
+        }
+        return $data;
     }
 
     private function getTvProgram()
     {
-        return cache()->remember('tvProgram', now()->addDay(), fn() => TvProgram::all());
+        $data = Cache::get('tvProgram');
+        if (is_null($data)) {            
+            Cache::put('tvProgram', TvProgram::all(), now()->addDay());
+            $data = Cache::get('tvProgram');
+        }
+
+        return $data;
     }
 
     private function getCategories()
     {
-        return cache()->remember('category', now()->addDay(), fn() => TvCategory::all());
+        $data = Cache::get('category');
+        if (is_null($data)) {            
+            Cache::put('category', TvCategory::all(), now()->addDay());
+            $data = Cache::get('category');
+        }
+
+        return $data;
     }
 
     private function videoDuration()
     {
-        return cache()->remember('videoDuration', now()->addHours(1), function () {
-            $sum = News::where('news.publish_status', 1)
+        $data = Cache::get('videoDuration');
+        if (is_null($data)) {
+            Cache::put('videoDuration', News::where('news.publish_status', 1)
                 ->whereIn('news.news_type_id', [1, 7])
                 ->where('news.is_video_exist', 1)
                 ->where('news.active', 1)
-                ->sum('news_duration');
+                ->sum('news_duration'), now()->addHours(1));
+            $sum = Cache::get('videoDuration');
 
             $seconds = $sum;
             $hours = floor($seconds / 3600);
@@ -217,8 +244,10 @@ class NewsController extends Controller
             $h = number_format($hours);
             $m = number_format($minutes);
 
-            return $h . " ชม. " . $m . " น.";
-        });
+            $data = $h . " ชม. " . $m . " น.";
+        }
+
+        return $data;        
     }
 
     public function update(News $id)
