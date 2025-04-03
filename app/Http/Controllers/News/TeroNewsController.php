@@ -18,16 +18,18 @@ class TeroNewsController extends Controller
                 ->where('news_tero.publish_status', 1)
                 ->where('news_tero.active', 1)
                 ->whereIn('news_tero.news_type_id', [1, 7])
-                ->paginate(30);
+                ->paginate(32);
         });
         $datas->each(function ($item) {
             $this->setPicture($item);
         });
 
         $news_count = TeroNews::newsCount();
+        $news_width_videos = 0;
+        // $news_width_videos = TeroNews::sumNewsVideo();
         $tv_programs = $this->getTvProgram();
 
-        return view('pages.tero-news', compact('datas', 'news_count', 'tv_programs'));
+        return view('pages.tero-news', compact('datas', 'news_count', 'tv_programs', 'news_width_videos'));
     }
 
     private function setPicture($item)

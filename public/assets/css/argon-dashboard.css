@@ -236,10 +236,10 @@ a {
   color: #fb6340;
   text-decoration: none;
 }
-a:hover {
+/* a:hover {
   color: #ea3005;
   text-decoration: none;
-}
+} */
 
 a:not([href]):not([class]), a:not([href]):not([class]):hover {
   color: inherit;

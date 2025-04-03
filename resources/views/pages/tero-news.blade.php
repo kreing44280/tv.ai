@@ -49,9 +49,9 @@
                         <div class="row">
                             <div class="col-8">
                                 <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Search Count</p>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">News with videos</p>
                                     <h5 class="font-weight-bolder">
-                                        {{ number_format($datas->total()) }}
+                                        {{ number_format($news_width_videos) }}
                                     </h5>
                                 </div>
                             </div>
@@ -69,34 +69,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                <div class="card">
-                    <div class="card-body p-3">
-                        <div class="row">
-                            <div class="col-8">
-                                <div class="numbers">
-                                    <p class="text-sm mb-0 text-uppercase font-weight-bold">Count Content</p>
-                                    <h5 class="font-weight-bolder">
-                                        0
-                                    </h5>
-                                </div>
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="icon icon-shape bg-gradient-primary shadow-primary text-center rounded-circle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" aria-hidden="true"
-                                        fill="white" class="bi bi-newspaper mt-2" viewBox="0 0 16 16">
-                                        <path
-                                            d="M0 2.5A1.5 1.5 0 0 1 1.5 1h11A1.5 1.5 0 0 1 14 2.5v10.528c0 .3-.05.654-.238.972h.738a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 1 1 0v9a1.5 1.5 0 0 1-1.5 1.5H1.497A1.497 1.497 0 0 1 0 13.5zM12 14c.37 0 .654-.211.853-.441.092-.106.147-.279.147-.531V2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v11c0 .278.223.5.497.5z" />
-                                        <path
-                                            d="M2 3h10v2H2zm0 3h4v3H2zm0 4h4v1H2zm0 2h4v1H2zm5-6h2v1H7zm3 0h2v1h-2zM7 8h2v1H7zm3 0h2v1h-2zm-3 2h2v1H7zm3 0h2v1h-2zm-3 2h2v1H7zm3 0h2v1h-2z" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </div>            
             <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
                 <div class="card">
                     <div class="card-body p-3">
@@ -179,43 +152,35 @@
                             </div>
                         </div>
                     </form>
-                    <div class="row row-cols-2">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
                         @foreach ($datas as $data)
-                            <div class="col-6 list-group-item border-0 d-flex flex-column flex-lg-row border-radius-lg">
-                                <div class="d-flex flex-column flex-lg-row align-items-lg-center">
-                                    <img style="width: 150px; height: 150px;" src="{{ asset($data->news_pic) }}"
-                                        alt="{{ $data->news_title }}" class="img-fluid me-3 image-picture">
-                                    <div class="d-flex flex-column">
-                                        <h6 class="text-sm text-truncate" style="max-width: 300px">
-                                            {{ $data->news_title }}
-                                        </h6>
-                                        <span class="mb-2 text-xs">News ID: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news_id }}</span></span>
-                                        <span class="mb-2 text-xs">TV Program: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->tvProgram->program_name ?? '-' }}</span></span>
-                                        <span class="mb-2 text-xs">Category: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->news_line_category ?? '-' }}</span></span>
-                                        <span class="mb-2 text-xs">News Type: <span
-                                                class="text-dark font-weight-bold ms-sm-2">{{ $data->newsType->news_type_name ?? '-' }}</span></span>
-                                        <span class="mb-2 text-xs">Video Duration: <span
-                                                class="text-dark font-weight-bold ms-sm-2">
-                                                {{ $data->video_duration ?? '-' }}
-                                            </span></span>
-                                        <span class="mb-2 text-xs">Created AT: <span
-                                                class="text-dark ms-sm-2 font-weight-bold">
+                            <a href="{{ route('news-detail', $data->news_id) }}">
+                                <div class="col">
+                                    <div class="card h-100 border-radius-lg">
+                                        <div class="w-100 rounded-top-5"
+                                            style="height: 180px; background-image: url('{{ asset($data->news_pic) }}'); background-size: cover; background-position: center; border-top-left-radius: inherit; border-top-right-radius: inherit;">
+                                        </div>
+                                        <div class="p-2">
+                                            <h6 class="text-sm font-weight-bold text-truncate" style="max-width: 100%">
+                                                {{ $data->news_title }}
+                                            </h6>
+                                            <p class="mb-1 text-xs"><strong>News ID:</strong> {{ $data->news_id }}</p>
+                                            <p class="mb-1 text-xs"><strong>TV Program:</strong>
+                                                {{ $data->tvProgram->program_name ?? '-' }}</p>
+                                            <p class="mb-1 text-xs"><strong>Category:</strong>
+                                                {{ $data->category_name ?? '-' }}</p>
+                                            <p class="mb-1 text-xs"><strong>News Type:</strong>
+                                                {{ $data->newsType->news_type_name ?? '-' }}</p>
+                                            <p class="mb-1 text-xs"><strong>Video Duration:</strong>
+                                                {{ $data->video_duration ?? '-' }}</p>
+                                            <p class="mb-1 text-xs"><strong>Created AT:</strong>
                                                 {{ $data->news_date->format('Y-m-d') }}
-                                                <span class="text-muted mx-1">
-                                                    ({{ $data->news_date->diffForHumans() }})
-                                                </span></span></span>
+                                                <span class="text-muted d-none d-md-inline">({{ $data->news_date->diffForHumans() }})</span>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="ms-auto text-end d-flex align-items-center">
-                                    <a class="btn btn-link px-3 mb-0"
-                                        href="{{ route('tero-news-detail', $data->news_id) }}"><i
-                                            class="fas fa-pencil-alt me-2" style="color: #ea3005"
-                                            aria-hidden="true"></i>Edit</a>
-                                </div>
-                            </div>
+                            </a>
                         @endforeach
                     </div>
                 </div>

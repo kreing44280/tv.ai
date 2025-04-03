@@ -24,21 +24,21 @@ class NewsController extends Controller
                 ->where('news.active', 1)
                 ->where('news.is_video_exist', 1)
                 ->whereIn('news.news_type_id', [1, 7])
-                ->paginate(30);
+                ->paginate(32);
         });
 
         $tv_programs = $this->getTvProgram();
         $categories = $this->getCategories();
-        $sumNewsContent = $this->sumNewsContent();
         $news_count = $this->newsCount();
         $videoDuration = $this->videoDuration();
+        $news_width_videos = $this->sumNewsVideo();
 
         // Apply the setPicture logic
         $datas->each(function ($item) {
             $this->setPicture($item);
         });
 
-        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent', 'videoDuration'));
+        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'videoDuration', 'news_width_videos'));
     }
 
     public function search()
@@ -199,6 +199,19 @@ class NewsController extends Controller
     private function getCategories()
     {
         return cache()->remember('category', now()->addDay(), fn() => TvCategory::all());
+    }
+
+    private function sumNewsVideo(){
+        return cache()->remember(
+            'sumNewsVideo',
+            now()->addHours(1),
+            fn() =>
+            News::whereIn('news_type_id', [1, 7])
+                ->where('publish_status', 1)
+                ->where('active', 1)
+                ->where('is_video_exist', 1)
+                ->count()
+        );
     }
 
     private function videoDuration()

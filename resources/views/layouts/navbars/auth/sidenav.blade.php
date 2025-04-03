@@ -37,7 +37,7 @@
                         </svg>
                     </div>
                     <div class="d-flex justify-content-between w-100 align-items-center">
-                        <span class="nav-link-text ms-1">News</span>
+                        <span class="nav-link-text ms-1">All News</span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                             <path
@@ -45,7 +45,7 @@
                         </svg>
                     </div>
                 </a>
-                <ul class="list-unstyled ms-3" id="pagesDropdown">
+                <ul class="list-unstyled ms-3 d-none" id="pagesDropdown">
                     <li>
                         <a class="nav-link pl-6 {{ Route::currentRouteName() == 'news' || Route::currentRouteName() == 'news-detail' || Route::currentRouteName() == 'news.search' ? 'active' : '' }}"
                             href="{{ route('news') }}">
