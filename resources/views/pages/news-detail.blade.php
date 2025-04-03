@@ -78,15 +78,16 @@
                                         <textarea name="seo_title" class="form-control" id="seo_title" cols="30" rows="6">{{ $datas->news->seo_title }}</textarea>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6 bg-gray-200">
+                                <div class="col-12 col-md-6 bg-gray-200">                                                                       
                                     <div class="mb-3">
-                                        <label for="news_title" class="form-label">News Title</label>
-                                        <input type="text" class="form-control" id="news_title" name="news_title"
+                                        <label for="news_title" class="form-label">News Title
+                                        </label>
+                                        <input type="text" class="form-control" id="news_title"
                                             value="{{ $datas->news->news_title }}">
                                     </div>
                                     <div class="mb-3">
                                         <label for="news_content" class="form-label">News Content</label>
-                                        <textarea name="news_content" class="form-control" id="news_content" name="news_content" cols="30" rows="10">{{ $datas->news->news_content }}</textarea>
+                                        <textarea name="news_content" class="form-control" id="news_content" cols="30" rows="10">{{ $datas->news->news_content }}</textarea>
                                     </div>
                                     <div class="mb-3">
                                         <button type="button" class="btn btn-primary" id="copyTextAI">Copy text
@@ -95,14 +96,13 @@
                                         <u class="text-danger text-sm">เมื่อกด Copy ข้อมูลจะไปแสดงที่ข้างบน !</u>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="news_title_ai" class="form-label">News Title AI
-                                        </label>
-                                        <input type="text" class="form-control" id="news_title_ai"
+                                        <label for="news_title_ai" class="form-label">News Title AI</label>
+                                        <input type="text" class="form-control" id="news_title_ai" name="news_title_ai"
                                             value="{{ $datas->news->news_title_ai }}">
                                     </div>
                                     <div class="mb-3">
                                         <label for="news_content_ai" class="form-label">News Content AI</label>
-                                        <textarea name="news_content_ai" class="form-control" id="news_content_ai" cols="30" rows="10">{{ $datas->news->news_content_ai }}</textarea>
+                                        <textarea name="news_content_ai" class="form-control" id="news_content_ai" name="news_content" cols="30" rows="10">{{ $datas->news->news_content_ai }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -141,20 +141,23 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            document.getElementById('copyTextAI').addEventListener('click', function() {
-                const news_title_ai = document.getElementById('news_title_ai').value;
-                const news_content_ai = document.getElementById('news_content_ai').value;
-                document.getElementById('news_title').value = news_title_ai;
-                document.getElementById('news_content').value = news_content_ai;
-            });
-
-            document.getElementById('copyTextAICancel').addEventListener('click', function() {
-                document.getElementById('news_title').value = {{ $datas->news->news_title }};
-                document.getElementById('news_content').value = {{ $datas->news->news_content }};
-            });
-        </script>
-
     </div>
+
+    <script>
+        $('#copyTextAI').click(function() {
+            const news_title_ai = $('#news_title_ai').val();
+            const news_content_ai = $('#news_content_ai').val();
+            if (news_title_ai == '' || news_content_ai == '') {
+                alert('กรุณากรอกข้อมูลให้ครบ');
+                return false;
+            }
+            $('#news_title').val(news_title_ai);
+            $('#news_content').val(news_content_ai);
+        });
+
+        $('#copyTextAICancel').click(function() {
+            $('#news_title').val(`{{ $datas->news->news_title }}`);
+            $('#news_content').val(`{{ $datas->news->news_content }}`);
+        });
+    </script>
 @endsection

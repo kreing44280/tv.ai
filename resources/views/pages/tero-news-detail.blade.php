@@ -1,9 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Video Detail'])
-    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    @include('layouts.navbars.auth.topnav', ['title' => 'Video Detail'])       
     <div class="container-fluid py-4">
 
         <div class="row">
@@ -165,6 +163,23 @@
                     ['link', 'image']
                 ]
             }
+        });
+
+
+        $('#copyTextAI').click(function() {
+            const news_title_ai = $('#news_title_ai').val();
+            const news_content_ai = $('#news_content_ai').val();
+            if(news_title_ai == '' && news_content_ai == '') {
+                alert('กรุณากรอกข้อมูล');
+                return;
+            }
+            $('#news_title').val(news_title_ai);
+            $('#news_content').val(news_content_ai);
+        });
+
+        $('#copyTextAICancel').click(function() {
+            $('#news_title').val(`{{ $datas->news_title }}`);
+            $('#news_content').val(`{{ $datas->news_content }}`);
         });
     </script>
 @endsection
