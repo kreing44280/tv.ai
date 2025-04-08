@@ -105,12 +105,12 @@
                         <div class="row grid-cols-2">
                             <div class="col d-flex flex-column align-items-start">
                                 <label for="startDate" class="form-label me-2">Start Date</label>
-                                <input type="date" class="form-control" id="startDate" name="startDate"
+                                <input type="date" class="form-control datepicker p-2" id="startDate" name="startDate"
                                     value="{{ request('startDate') }}">
                             </div>
                             <div class="col d-flex flex-column align-items-start">
                                 <label for="endDate" class="form-label me-2">End Date</label>
-                                <input type="date" class="form-control" id="endDate" name="endDate"
+                                <input type="date" class="form-control datepicker p-2" id="endDate" name="endDate"
                                     value="{{ request('endDate') }}">
                             </div>
                             <div class="col d-flex flex-column align-items-start">

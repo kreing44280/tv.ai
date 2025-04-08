@@ -131,3 +131,19 @@ if (tagInputFieldHuman) {
     });
 }
 // }
+
+$('#startDate').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+    width: 'auto',
+    height: 'auto'
+});
+
+$('#endDate').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+    width: 'auto',
+    height: 'auto'
+});
