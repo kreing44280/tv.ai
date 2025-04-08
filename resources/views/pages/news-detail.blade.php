@@ -39,6 +39,13 @@
                                             {{ $datas->news->news_duration }}</span>
                                     </div>
                                     <div class="mb-1">
+                                        <label class="form-label">Play MP3</label>
+                                        <audio controls class="w-100">
+                                            <source src="" type="audio/mp3">
+                                            Your browser does not support the audio tag.
+                                        </audio>
+                                    </div>
+                                    <div class="mb-1">
                                         <label class="form-label">Created AT: </label>
                                         <span class="text-xs me-1">
                                             {{ $datas->news->news_date->format('Y-m-d') }}</span>

@@ -164,16 +164,16 @@
                                             <h6 class="text-sm font-weight-bold text-truncate" style="max-width: 100%">
                                                 {{ $data->news_title }}
                                             </h6>
-                                            <p class="mb-1 text-xs"><strong>News ID:</strong> {{ $data->news_id }}</p>
-                                            <p class="mb-1 text-xs"><strong>TV Program:</strong>
+                                            <p class="mb-2 text-xs"><strong>News ID:</strong> {{ $data->news_id }}</p>
+                                            <p class="mb-2 text-xs"><strong>TV Program:</strong>
                                                 {{ $data->tvProgram->program_name ?? '-' }}</p>
-                                            <p class="mb-1 text-xs"><strong>Category:</strong>
+                                            <p class="mb-2 text-xs"><strong>Category:</strong>
                                                 {{ $data->category_name ?? '-' }}</p>
-                                            <p class="mb-1 text-xs"><strong>News Type:</strong>
+                                            <p class="mb-2 text-xs"><strong>News Type:</strong>
                                                 {{ $data->newsType->news_type_name ?? '-' }}</p>
-                                            <p class="mb-1 text-xs"><strong>Video Duration:</strong>
+                                            <p class="mb-2 text-xs"><strong>Video Duration:</strong>
                                                 {{ $data->video_duration ?? '-' }}</p>
-                                            <p class="mb-1 text-xs"><strong>Created AT:</strong>
+                                            <p class="mb-2 text-xs"><strong>Created AT:</strong>
                                                 {{ $data->news_date->format('Y-m-d') }}
                                                 <span class="text-muted d-none d-md-inline">({{ $data->news_date->diffForHumans() }})</span>
                                             </p>
