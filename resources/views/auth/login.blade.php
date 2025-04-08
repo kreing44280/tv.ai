@@ -3,7 +3,7 @@
 @section('content')    
     <main class="main-content mt-0">
         <section>
-            <div class="page-header min-vh-100" style="background-image: url({{ asset('img/bg-login.jpg') }});">
+            <div class="page-header min-vh-100" style="background-image: url({{ asset('img/bg-login.png') }});">
                 <div class="container">
                     <div class="row">
                         <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column justify-content-end" style="margin-left: auto">

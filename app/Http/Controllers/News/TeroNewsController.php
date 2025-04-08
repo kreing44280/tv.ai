@@ -93,7 +93,7 @@ class TeroNewsController extends Controller
         $datas->where('publish_status', 1);
         $datas->where('active', 1);
 
-        $datas = $datas->paginate(10)->appends(request()->query());
+        $datas = $datas->paginate(32)->appends(request()->query());
 
 
         $datas->each(function ($item) {

@@ -2,8 +2,7 @@
 
 @section('content')
 <main class="main-content  mt-0">
-    <div class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg"
-        style="background-image: url({{ asset('img/register-ai.jpg') }}); background-position: top;">
+    <div class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg">
         <span class="mask bg-gradient-dark opacity-6"></span>       
     </div>
     <div class="container">
