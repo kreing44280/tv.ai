@@ -154,7 +154,7 @@
                     </form>
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-3">
                         @foreach ($datas as $data)
-                            <a href="{{ route('news-detail', $data->news_id) }}">
+                            <a href="{{ route('tero-news-detail', $data->news_id) }}">
                                 <div class="col">
                                     <div class="card h-100 border-radius-lg">
                                         <div class="w-100 rounded-top-5"

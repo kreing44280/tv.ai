@@ -282,7 +282,7 @@
                         enabled: false, // ปิด tooltip ที่ต้องโฮเวอร์
                     },
                     datalabels: {
-                        align: 'top', // ให้แสดงค่าด้านบนจุด
+                        align: 'center', // ให้แสดงค่าด้านบนจุด
                         anchor: 'end',
                         color: '#333', // สีของตัวเลข
                         font: {

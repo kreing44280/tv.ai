@@ -49,7 +49,8 @@
                                             <div class="col">
                                                 <label for="news_type" class="form-label">News Type</label>
                                                 <input type="text" class="form-control" id="news_type"
-                                                    value="{{ $datas->news->newsType->news_type_name }}">
+                                                    value="{{ $datas->news->newsType->news_type_name }}"
+                                                    readonly>
                                             </div>
                                             <div class="col">
                                                 <label for="category_name" class="form-label">Category Name</label>
@@ -63,7 +64,8 @@
                                             <div class="col">
                                                 <label for="category_name" class="form-label">TV Program</label>
                                                 <input type="text" class="form-control" id="category_name"
-                                                    value="{{ $datas->news->tvProgram->program_name }}">
+                                                    value="{{ $datas->news->tvProgram->program_name }}"
+                                                    readonly>
                                             </div>
                                             <div class="col">
                                                 <label for="news_permalink" class="form-label">News Permalink</label>

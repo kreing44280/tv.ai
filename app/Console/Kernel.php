@@ -22,7 +22,7 @@ class Kernel extends BaseKernel
 
     public function dashboard()
     {
-        cache()->remember('dashboardData', now()->addMinutes(20), function () {
+        cache()->remember('dashboardData', now()->addHours(8), function () {
             $array = $this->getPublishedNewsCount();
             return [
                 'categoryCountViews' => NewsCategory::categoryCountView(),
@@ -74,14 +74,14 @@ class Kernel extends BaseKernel
 
     public function sumNewsContent()
     {
-        cache()->remember('sumNewsContent', now()->addMinutes(20), function () {
+        cache()->remember('sumNewsContent', now()->addHours(8), function () {
             return News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->where('news.is_video_exist', 1)->sum('news_content_count');
         });
     }
 
     public function newsCount()
     {
-        cache()->remember('newsCount', now()->addMinutes(20), function () {
+        cache()->remember('newsCount', now()->addHours(8), function () {
             return News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
                 ->whereIn('news.news_type_id', [1, 7])
                 ->where('news.publish_status', 1)
@@ -93,7 +93,7 @@ class Kernel extends BaseKernel
 
     public function videoDuration()
     {
-        cache()->remember('videoDuration', now()->addMinutes(20), function () {
+        cache()->remember('videoDuration', now()->addHours(8), function () {
             $sum = News::where('news.publish_status', 1)
                 ->whereIn('news.news_type_id', [1, 7])
                 ->where('news.is_video_exist', 1)
@@ -113,7 +113,7 @@ class Kernel extends BaseKernel
 
     public function archiveNews()
     {
-        cache()->remember('news_data_page_' . request('page', 1), now()->addMinutes(20), function () {
+        cache()->remember('news_data_page_' . request('page', 1), now()->addHours(8), function () {
             return News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
             category.category_name, news.news_pic, news.news_type_id, news.program_id,
             TIME_FORMAT(SEC_TO_TIME(news.news_duration), "%H:%i:%s") as video_duration')
@@ -130,7 +130,7 @@ class Kernel extends BaseKernel
 
     public function teroNews()
     {
-        cache()->remember('teroNewsPaginated_' . request('page', 1), now()->addMinutes(20), function () {
+        cache()->remember('teroNewsPaginated_' . request('page', 1), now()->addHours(8), function () {
             return TeroNews::selectRaw('news_tero.news_id, news_tero.news_title, news_tero.news_date, news_tero.news_permalink,
                 news_tero.news_pic, news_tero.news_type_id, news_tero.program_id, news_tero.news_line_category')
                 ->with('tvProgram', 'newsType')

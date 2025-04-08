@@ -188,7 +188,7 @@ class TeroNews extends Model
     public static function sumNewsVideo(){
         return cache()->remember(
             'sumNewsVideoTero',
-            now()->addHours(1),
+            now()->addDay(),
             fn() =>
             TeroNews::whereIn('news_type_id', [1, 7])
                 ->where('publish_status', 1)
@@ -202,7 +202,7 @@ class TeroNews extends Model
     {
         return cache()->remember(
             'newsCountTero',
-            now()->addHours(1),
+            now()->addDay(),
             fn() =>
             TeroNews::whereIn('news_type_id', [1, 7])
                 ->where('publish_status', 1)
@@ -215,7 +215,7 @@ class TeroNews extends Model
     {
         // return cache()->remember(
         //     'sumNewsContentTero',
-        //     now()->addHours(1),
+        //     now()->addDay(),
         //     fn() =>
         //     TeroNews::whereIn('news_type_id', [1, 7])
         //         ->where('publish_status', 1)

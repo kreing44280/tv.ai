@@ -13,7 +13,7 @@ class NewsController extends Controller
 {
     public function index()
     {
-        $datas = cache()->remember('news_data_page_' . request('page', 1), now()->addHours(1), function () {
+        $datas = cache()->remember('news_data_page_' . request('page', 1), now()->addDay(), function () {
             return News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
             category.category_name, news.news_pic, news.news_type_id, news.program_id,
             TIME_FORMAT(SEC_TO_TIME(news.news_duration), "%H:%i:%s") as video_duration')
@@ -105,11 +105,11 @@ class NewsController extends Controller
 
         $tv_programs = $this->getTvProgram();
         $categories = $this->getCategories();
-        $sumNewsContent = $this->sumNewsContent();
         $news_count = $this->newsCount();
         $videoDuration = $this->videoDuration();
+        $news_width_videos = $this->sumNewsVideo();
 
-        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'sumNewsContent', 'videoDuration'));
+        return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'news_width_videos', 'videoDuration'));
     }
 
 
@@ -175,7 +175,7 @@ class NewsController extends Controller
     {
         return cache()->remember(
             'newsCount',
-            now()->addHours(1),
+            now()->addDay(),
             fn() =>
             News::join('news_category', 'news.news_id', '=', 'news_category.news_id')
                 ->whereIn('news.news_type_id', [1, 7])
@@ -188,7 +188,7 @@ class NewsController extends Controller
 
     private function sumNewsContent()
     {
-        return cache()->remember('sumNewsContent', now()->addHours(1), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->where('news.is_video_exist', 1)->sum('news_content_count'));
+        return cache()->remember('sumNewsContent', now()->addDay(), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->where('news.is_video_exist', 1)->sum('news_content_count'));
     }
 
     private function getTvProgram()
@@ -204,7 +204,7 @@ class NewsController extends Controller
     private function sumNewsVideo(){
         return cache()->remember(
             'sumNewsVideo',
-            now()->addHours(1),
+            now()->addDay(),
             fn() =>
             News::whereIn('news_type_id', [1, 7])
                 ->where('publish_status', 1)
@@ -216,7 +216,7 @@ class NewsController extends Controller
 
     private function videoDuration()
     {
-        return cache()->remember('videoDuration', now()->addHours(1), function () {
+        return cache()->remember('videoDuration', now()->addDay(), function () {
             $sum = News::where('news.publish_status', 1)
                 ->whereIn('news.news_type_id', [1, 7])
                 ->where('news.is_video_exist', 1)
