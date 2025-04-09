@@ -5,6 +5,7 @@ namespace App\Http\Controllers\News;
 use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\NewsCategory;
+use App\Models\NewsType;
 use App\Models\TvCategory;
 use App\Models\TvProgram;
 use Illuminate\Support\Facades\Http;
@@ -158,7 +159,15 @@ class NewsController extends Controller
 
         $datas->news->news_content = strip_tags(html_entity_decode($datas->news->news_content));
 
-        return view('pages.news-detail', compact('datas'));
+        $tv_programs = $this->getTvProgram();
+        $news_types = $this->getNewsType();
+        $categories = $this->getCategories();
+
+        return view('pages.news-detail', compact('datas', 'tv_programs', 'news_types', 'categories'));
+    }
+
+    private function getNewsType() {
+        return cache()->remember('newsType', now()->addDay(), fn() => NewsType::all());
     }
 
     private function getVideoUrl($folder, $news_date, $news_id)

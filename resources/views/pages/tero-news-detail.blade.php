@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Video Detail'])       
+    @include('layouts.navbars.auth.topnav', ['title' => 'Video Detail'])
     <div class="container-fluid py-4">
 
         <div class="row">
@@ -15,50 +15,21 @@
                             class="needs-validation" novalidate>
                             @csrf
                             <div class="row g-3">
-                                <div class="col-12 col-md-6">
-                                    <div class="form-group mb-3">
-                                        <video controls class="w-100">
-                                            <source src="{{ $datas->video_url }}" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    </div>
-                                    <div class="mb-1">
-                                        <label class="form-label">News convert mp3 status</label>
-                                        <span
-                                            class="text-xs @if ($datas->news_convert_mp3_status == 'success') text-success @else text-warning @endif opacity-8 me-1">
-                                            ( {{ $datas->news_convert_mp3_status }} )</span>
-                                    </div>
-                                    <div class="mb-1">
-                                        <label class="form-label">News convert transcript status</label>
-                                        <span
-                                            class="text-xs @if ($datas->news_convert_transcript_status == 'success') text-success @else text-warning @endif opacity-8 me-1">
-                                            ( {{ $datas->news_convert_transcript_status }} )</span>
-                                    </div>
-                                    <div class="mb-1">
-                                        <label class="form-label">News duration: </label>
-                                        <span class="text-xs me-1">
-                                            {{ $datas->news_duration }}</span>
-                                    </div>
-                                    <div class="mb-1">
-                                        <label class="form-label">Play MP3</label>
-                                        <audio controls class="w-100">
-                                            <source src="" type="audio/mp3">
-                                            Your browser does not support the audio tag.
-                                        </audio>
-                                    </div>
-                                    <div class="mb-1">
-                                        <label class="form-label">Created AT: </label>
-                                        <span class="text-xs me-1">
-                                            {{ $datas->news_date->format('Y-m-d') }}</span>
-                                    </div>
-
+                                <div class="col-12">
                                     <div class="mb-3">
                                         <div class="row">
                                             <div class="col">
-                                                <label for="news_type" class="form-label">News Type</label>
-                                                <input type="text" class="form-control" id="news_type"
-                                                    value="{{ $datas->newsType->news_type_name }}">
-                                            </div>
+                                                <label for="tv_program" class="form-label">TV Program</label>
+                                                <select class="form-select" id="tv_program" name="tv_program">
+                                                    <option value="">Select a TV Program</option>
+                                                    @foreach ($tv_programs as $tv_program)
+                                                        <option value="{{ $tv_program->program_id }}"
+                                                            {{ $datas->program_id == $tv_program->program_id ? 'selected' : '' }}>
+                                                            {{ $tv_program->program_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>                                            
                                             <div class="col">
                                                 <label for="category_name" class="form-label">Category Name</label>
                                                 <input type="text" class="form-control" id="category_name"
@@ -69,9 +40,16 @@
                                     <div class="mb-3">
                                         <div class="row">
                                             <div class="col">
-                                                <label for="category_name" class="form-label">TV Program</label>
-                                                <input type="text" class="form-control" id="category_name"
-                                                    value="{{ $datas->tvProgram->program_name }}">
+                                                <label for="news_type" class="form-label">News Type</label>
+                                                <select class="form-select" id="news_type" name="news_type">
+                                                    <option value="">Select a News Type</option>
+                                                    @foreach ($news_types as $news_type)
+                                                        <option value="{{ $news_type->news_type_id }}"
+                                                            {{ $datas->news_type_id == $news_type->news_type_id ? 'selected' : '' }}>
+                                                            {{ $news_type->news_type_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
                                             <div class="col">
                                                 <label for="news_permalink" class="form-label">News Permalink</label>
@@ -80,28 +58,8 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="mb-3">
-                                        <label for="seo_title" class="form-label">SEO Title</label>
-                                        <textarea name="seo_title" class="form-control" id="seo_title" cols="30" rows="6">{{ $datas->seo_title }}</textarea>
-                                    </div>
                                 </div>
-                                <div class="col-12 col-md-6 bg-gray-200">
-                                    <div class="mb-3">
-                                        <label for="news_title" class="form-label">News Title</label>
-                                        <input type="text" class="form-control" id="news_title" name="news_title"
-                                            value="{{ $datas->news_title }}">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="news_content" class="form-label">News Content</label>
-                                        <textarea name="news_content" class="form-control" id="news_content" cols="30" rows="10">{{ $datas->news_content }}</textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <button type="button" class="btn btn-primary" id="copyTextAI">Copy text
-                                            AI</button>
-                                        <span class="btn btn-danger" id="copyTextAICancel">Cancel</span><br>
-                                        <u class="text-danger text-sm">เมื่อกด Copy ข้อมูลจะไปแสดงที่ข้างบน !</u>
-                                    </div>
+                                <div class="col-12 bg-gray-200">
                                     <div class="mb-3">
                                         <label for="news_title_ai" class="form-label">News Title AI
                                         </label>
@@ -110,9 +68,63 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="news_content_ai" class="form-label">News Content AI</label>
-                                        <div id="news_content_ai" class="ql-editor"
-                                            style="height: 200px;">{{ $datas->news_content_ai }}</div>                                        
+                                        <textarea name="news_content_ai" class="form-control" id="news_content_ai" cols="30" rows="20">{{ $datas->news_content_ai }}</textarea>
+                                    </div>                                   
+                                    <div class="mb-3">
+                                        <button type="button" class="btn btn-primary" id="copyTextAI">Copy text
+                                            AI</button>
+                                        <span class="btn btn-danger" id="copyTextAICancel">Cancel</span><br>
+                                        <u class="text-danger text-sm">เมื่อกด Copy ข้อมูลจะไปแสดงที่ข้างล้าง !</u>
+                                    </div>   
+                                    <div class="mb-3">
+                                        <label for="news_title" class="form-label">News Title</label>
+                                        <input type="text" class="form-control" id="news_title" name="news_title"
+                                            value="{{ $datas->news_title }}">
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="news_content" class="form-label">News Content</label>
+                                        <div id="news_content" class="ql-editor bg-white" style="height: 500px;">
+                                            {{ $datas->news_content }}</div>
+                                    </div>                                
+                                </div>                               
+                                <div class="form-group mb-3">
+                                    <video controls class="w-100">
+                                        <source src="{{ $datas->video_url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                <div class="mb-1">
+                                    <label class="form-label">News convert mp3 status</label>
+                                    <span
+                                        class="text-xs @if ($datas->news_convert_mp3_status == 'success') text-success @else text-warning @endif opacity-8 me-1">
+                                        ( {{ $datas->news_convert_mp3_status }} )</span>
+                                </div>
+                                <div class="mb-1">
+                                    <label class="form-label">News convert transcript status</label>
+                                    <span
+                                        class="text-xs @if ($datas->news_convert_transcript_status == 'success') text-success @else text-warning @endif opacity-8 me-1">
+                                        ( {{ $datas->news_convert_transcript_status }} )</span>
+                                </div>
+                                <div class="mb-1">
+                                    <label class="form-label">News duration: </label>
+                                    <span class="text-xs me-1">
+                                        {{ $datas->news_duration }}</span>
+                                </div>
+                                <div class="mb-1">
+                                    <label class="form-label">Play MP3</label>
+                                    <audio controls class="w-100">
+                                        <source src="" type="audio/mp3">
+                                        Your browser does not support the audio tag.
+                                    </audio>
+                                </div>
+                                <div class="mb-1">
+                                    <label class="form-label">Created AT: </label>
+                                    <span class="text-xs me-1">
+                                        {{ $datas->news_date->format('Y-m-d') }}</span>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="seo_title" class="form-label">SEO Title</label>
+                                    <textarea name="seo_title" class="form-control" id="seo_title" cols="30" rows="6">{{ $datas->seo_title }}</textarea>
                                 </div>
                             </div>
                             <div class="row g-3 pb-3">
@@ -153,7 +165,7 @@
     </div>
 
     <script>
-        var quill = new Quill('#news_content_ai', {
+        var quill = new Quill('#news_content', {
             theme: 'snow',
             modules: {
                 toolbar: [
@@ -181,12 +193,9 @@
                     }, {
                         'background': []
                     }],
-                   
                 ]
             }
         });
-
-        quill.enable(false);
 
         quill.getModule('toolbar').addHandler('image', () => {
             const input = document.createElement('input');
@@ -199,23 +208,23 @@
                 formData.append('image', file);
 
                 fetch('/upload-image', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-Token': '{{ csrf_token() }}'
-                    }
-                })
-                .then(response => {
-                    if(response.ok) {
-                        return response.json();
-                    }
-                    throw new Error('Network response was not ok.');
-                })
-                .then(data => {
-                    const range = quill.getSelection();
-                    quill.insertEmbed(range.index, 'image', `${data.url}`);
-                })
-                .catch(error => console.log(error));
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-Token': '{{ csrf_token() }}'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then(data => {
+                        const range = quill.getSelection();
+                        quill.insertEmbed(range.index, 'image', `${data.url}`);
+                    })
+                    .catch(error => console.log(error));
             }
         });
 
@@ -223,7 +232,7 @@
         $('#copyTextAI').click(function() {
             const news_title_ai = $('#news_title_ai').val();
             const news_content_ai = $('#news_content_ai').val();
-            if(news_title_ai == '' && news_content_ai == '') {
+            if (news_title_ai == '' && news_content_ai == '') {
                 alert('กรุณากรอกข้อมูล');
                 return;
             }

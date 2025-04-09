@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\News;
 
 use App\Http\Controllers\Controller;
+use App\Models\NewsType;
 use App\Models\TeroNews;
 use App\Models\TvProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 
 class TeroNewsController extends Controller
 {
@@ -47,6 +51,10 @@ class TeroNewsController extends Controller
     private function getTvProgram()
     {
         return cache()->remember('tvProgram', now()->addDay(), fn() => TvProgram::all());
+    }
+
+    private function getNewsType() {
+        return cache()->remember('newsType', now()->addDay(), fn() => NewsType::all());
     }
 
     public function search()
@@ -117,8 +125,10 @@ class TeroNewsController extends Controller
     {
         $datas = TeroNews::with(['TvProgram', 'newsType'])->where('news_id', $id)->first();
         $datas->news_content = strip_tags(html_entity_decode($datas->news_content));
+        $tv_programs = $this->getTvProgram();
+        $news_types = $this->getNewsType();
 
-        return view('pages.tero-news-detail', compact('datas'));
+        return view('pages.tero-news-detail', compact('datas', 'tv_programs', 'news_types'));
     }
 
     private function getVideoUrl($folder, $news_date, $news_id)
@@ -149,12 +159,34 @@ class TeroNewsController extends Controller
     }
 
     public function uploadImage(Request $request)
-    {        
-        $file = $request->file('image');
-        $extension = $file->getClientOriginalExtension();
-        $filename = time() . '.' . $extension;
-        $file = Storage::disk('public')->putFileAs('images', $file, $filename);
-
-        return response()->json(['url' => asset('storage/images/' . $filename)]);
+    {
+        $request->validate([
+            'image' => 'required|image',
+        ]);
+    
+        $image = $request->file('image');
+        $filename = uniqid() . '.jpg'; // Force JPG for better compression
+    
+        // Set up the image manager
+        $manager = new ImageManager(new Driver());
+    
+        // Load, resize, and compress
+        $resizedImage = $manager->read($image)
+            ->resize(800, 800, function ($constraint) {
+                $constraint->aspectRatio(); // Keep proportions
+                $constraint->upsize();      // Prevent stretching
+            });
+    
+        // Save as JPEG with 75% quality (adjust as needed)
+        $compressed = $resizedImage->toJpeg(75);
+    
+        // Store it
+        Storage::disk('public')->put("images/{$filename}", (string) $compressed);
+    
+        return response()->json([
+            'message' => 'Image downsized (resized + compressed)',
+            'filename' => $filename,
+            'url' => asset('storage/images/' . $filename),
+        ]);
     }
 }
