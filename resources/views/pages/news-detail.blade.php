@@ -111,7 +111,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="news_content_ai" class="form-label">News Content AI</label>
-                                        <textarea name="news_content_ai" class="form-control" id="news_content_ai" name="news_content" cols="30" rows="10">{{ $datas->news->news_content_ai }}</textarea>
+                                        <textarea name="news_content_ai" class="form-control" id="news_content_ai" name="news_content" cols="30" rows="11">{{ $datas->news->news_content_ai }}</textarea>
                                     </div>
                                 </div>
                             </div>

@@ -17,10 +17,10 @@
                             <div class="row g-3">
                                 <div class="col-12 col-md-6">
                                     <div class="form-group mb-3">
-                                        {{-- <video controls class="w-100">
+                                        <video controls class="w-100">
                                             <source src="{{ $datas->video_url }}" type="video/mp4">
                                             Your browser does not support the video tag.
-                                        </video> --}}
+                                        </video>
                                     </div>
                                     <div class="mb-1">
                                         <label class="form-label">News convert mp3 status</label>
@@ -110,7 +110,8 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="news_content_ai" class="form-label">News Content AI</label>
-                                        <textarea name="news_content_ai" class="form-control" id="news_content_ai" cols="30" rows="6">{{ $datas->news_content_ai }}</textarea>
+                                        <div id="news_content_ai" class="ql-editor"
+                                            style="height: 200px;">{{ $datas->news_content_ai }}</div>                                        
                                     </div>
                                 </div>
                             </div>
@@ -151,14 +152,20 @@
         </div>
     </div>
 
-
-
     <script>
         var quill = new Quill('#news_content_ai', {
             theme: 'snow',
             modules: {
                 toolbar: [
-                    ['bold', 'italic', 'underline'],
+                    [{
+                        'size': ['small', false, 'large', 'huge']
+                    }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{
+                        'header': 1
+                    }, {
+                        'header': 2
+                    }],
                     [{
                         'list': 'ordered'
                     }, {
@@ -167,8 +174,48 @@
                     [{
                         'align': []
                     }],
-                    ['link', 'image']
+                    ['link', 'image', 'video'],
+                    ['clean'],
+                    [{
+                        'color': []
+                    }, {
+                        'background': []
+                    }],
+                   
                 ]
+            }
+        });
+
+        quill.enable(false);
+
+        quill.getModule('toolbar').addHandler('image', () => {
+            const input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.click();
+
+            input.onchange = () => {
+                const file = input.files[0];
+                const formData = new FormData();
+                formData.append('image', file);
+
+                fetch('/upload-image', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-Token': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => {
+                    if(response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                .then(data => {
+                    const range = quill.getSelection();
+                    quill.insertEmbed(range.index, 'image', `${data.url}`);
+                })
+                .catch(error => console.log(error));
             }
         });
 

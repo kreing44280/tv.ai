@@ -5,7 +5,9 @@ namespace App\Http\Controllers\News;
 use App\Http\Controllers\Controller;
 use App\Models\TeroNews;
 use App\Models\TvProgram;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class TeroNewsController extends Controller
 {
@@ -144,5 +146,15 @@ class TeroNewsController extends Controller
             }
         }
         return 404;
+    }
+
+    public function uploadImage(Request $request)
+    {        
+        $file = $request->file('image');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . '.' . $extension;
+        $file = Storage::disk('public')->putFileAs('images', $file, $filename);
+
+        return response()->json(['url' => asset('storage/images/' . $filename)]);
     }
 }
