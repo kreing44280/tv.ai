@@ -94,12 +94,20 @@
                                             {{ $datas->news->news_content }}</div>
                                     </div>                                    
                                 </div>
-                                <div class="col-12">
-                                    <div class="form-group mb-3">
-                                        <video controls class="w-100">
-                                            <source src="{{ $datas->news->video_url }}" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
+                                <div class="col-12">                                  
+                                    <div class="row g-3">
+                                        <div class="col-12 col-md-6">
+                                            <video controls class="w-100 h-100">
+                                                <source src="{{ $datas->news->video_url }}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="ratio ratio-16x9">
+                                                <img src="{{ asset($datas->news->news_pic) }}" alt="News Image"
+                                                    class="w-100">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="mb-1">
                                         <label class="form-label">News convert mp3 status</label>

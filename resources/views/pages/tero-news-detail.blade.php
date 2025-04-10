@@ -29,7 +29,7 @@
                                                         </option>
                                                     @endforeach
                                                 </select>
-                                            </div>                                            
+                                            </div>
                                             <div class="col">
                                                 <label for="category_name" class="form-label">Category Name</label>
                                                 <input type="text" class="form-control" id="category_name"
@@ -69,13 +69,13 @@
                                     <div class="mb-3">
                                         <label for="news_content_ai" class="form-label">News Content AI</label>
                                         <textarea name="news_content_ai" class="form-control" id="news_content_ai" cols="30" rows="20">{{ $datas->news_content_ai }}</textarea>
-                                    </div>                                   
+                                    </div>
                                     <div class="mb-3">
                                         <button type="button" class="btn btn-primary" id="copyTextAI">Copy text
                                             AI</button>
                                         <span class="btn btn-danger" id="copyTextAICancel">Cancel</span><br>
                                         <u class="text-danger text-sm">เมื่อกด Copy ข้อมูลจะไปแสดงที่ข้างล้าง !</u>
-                                    </div>   
+                                    </div>
                                     <div class="mb-3">
                                         <label for="news_title" class="form-label">News Title</label>
                                         <input type="text" class="form-control" id="news_title" name="news_title"
@@ -85,13 +85,21 @@
                                         <label for="news_content" class="form-label">News Content</label>
                                         <div id="news_content" class="ql-editor bg-white" style="height: 500px;">
                                             {{ $datas->news_content }}</div>
-                                    </div>                                
-                                </div>                               
-                                <div class="form-group mb-3">
-                                    <video controls class="w-100">
-                                        <source src="{{ $datas->video_url }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
+                                    </div>
+                                </div>
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <video controls class="w-100 h-100">
+                                            <source src="{{ $datas->video_url }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="ratio ratio-16x9">
+                                            <img src="{{ asset($datas->news_pic) }}" alt="News Image"
+                                                class="w-100">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="mb-1">
                                     <label class="form-label">News convert mp3 status</label>

@@ -128,6 +128,8 @@ class TeroNewsController extends Controller
         $tv_programs = $this->getTvProgram();
         $news_types = $this->getNewsType();
 
+        $this->setPicture($datas);
+
         return view('pages.tero-news-detail', compact('datas', 'tv_programs', 'news_types'));
     }
 

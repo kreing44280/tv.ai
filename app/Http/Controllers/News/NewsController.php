@@ -163,6 +163,7 @@ class NewsController extends Controller
         $news_types = $this->getNewsType();
         $categories = $this->getCategories();
 
+        $this->setPicture($datas->news);
         return view('pages.news-detail', compact('datas', 'tv_programs', 'news_types', 'categories'));
     }
 
@@ -246,7 +247,7 @@ class NewsController extends Controller
     public function update(News $id)
     {
         $data = request()->all();
-
+        dd($data);
         // $id->update([
         //     News::NEWS_TITLE => $data['news_title'] ?? $id->news_title,
         //     News::NEWS_TRANSCRIPT => $data['news_transcript'] ?? $id->news_transcript,
