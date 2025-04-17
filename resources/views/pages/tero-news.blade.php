@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'News'])
+    @include('layouts.navbars.auth.topnav', ['title' => 'Tero News', 'url' => route('tero_news')])
     <style>
         @media (max-width: 680px) {
             .image-picture {
@@ -112,19 +112,7 @@
                                 <label for="endDate" class="form-label me-2">End Date</label>
                                 <input type="date" class="form-control datepicker p-2" id="endDate" name="endDate"
                                     value="{{ request('endDate') }}">
-                            </div>
-                            {{-- <div class="col d-flex flex-column align-items-start">
-                                <label for="category" class="form-label me-2">Category</label>
-                                <select name="category" id="category" class="form-select">
-                                    <option value="">All</option>
-                                    @foreach ($categories as $category)
-                                        <option value="{{ $category->category_id }}"
-                                            {{ request('category') == $category->category_id ? 'selected' : '' }}>
-                                            {{ $category->category_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div> --}}
+                            </div>                       
                             <div class="col d-flex flex-column align-items-start">
                                 <label for="tv_program" class="form-label me-2">TV Program</label>
                                 <select name="tv_program" id="tv_program" class="form-select">

@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'Video Detail'])
+    @include('layouts.navbars.auth.topnav', ['title' => 'Tero News', 'url' => route('tero_news')])
     <div class="container-fluid py-4">
 
         <div class="row">
@@ -72,7 +72,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <button type="button" class="btn btn-primary" id="copyTextAI"
-                                        onclick="copyTextAIFunc()">Copy text
+                                            onclick="copyTextAIFunc()">Copy text
                                             AI</button>
                                         <span class="btn btn-danger" id="copyTextAICancel"
                                             onclick="copyTextAICancelFunc(`{{ $datas->news_title }}`, `{{ $datas->news_content }}`)">Cancel</span><br>
@@ -98,8 +98,7 @@
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="ratio ratio-16x9">
-                                            <img src="{{ asset($datas->news_pic) }}" alt="News Image"
-                                                class="w-100">
+                                            <img src="{{ asset($datas->news_pic) }}" alt="News Image" class="w-100">
                                         </div>
                                     </div>
                                 </div>
@@ -172,5 +171,5 @@
                 </div>
             </div>
         </div>
-    </div>    
+    </div>
 @endsection

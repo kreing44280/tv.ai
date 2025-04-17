@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-    @include('layouts.navbars.auth.topnav', ['title' => 'News'])
+@include('layouts.navbars.auth.topnav', ['title' => 'Archived News', 'url' => route('news')])
     <style>
         @media (max-width: 680px) {
             .image-picture {
