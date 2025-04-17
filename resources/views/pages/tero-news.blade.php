@@ -98,6 +98,11 @@
                 </div>
             </div>
         </div>
+        <div class="row pb-4">
+            <div class="card">
+                
+            </div>
+        </div>
         <div class="row">
             <div class="card p-0">
                 <div class="card-body pt-4">
@@ -126,7 +131,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row grid-cols-2 gap-3 align-items-center">
+                        <div class="row grid-cols-2 align-items-center">
                             <div class="col d-flex flex-column align-items-start">
                                 <label for="newsName" class="form-label me-2">Search</label>
                                 <input type="text" class="form-control input-search" placeholder="Search..."

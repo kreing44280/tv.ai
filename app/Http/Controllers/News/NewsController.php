@@ -5,9 +5,6 @@ namespace App\Http\Controllers\News;
 use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\NewsCategory;
-use App\Models\NewsType;
-use App\Models\TvCategory;
-use App\Models\TvProgram;
 use Illuminate\Support\Facades\Http;
 
 class NewsController extends Controller
@@ -167,10 +164,6 @@ class NewsController extends Controller
         return view('pages.news-detail', compact('datas', 'tv_programs', 'news_types', 'categories'));
     }
 
-    private function getNewsType() {
-        return cache()->remember('newsType', now()->addDay(), fn() => NewsType::all());
-    }
-
     private function getVideoUrl($folder, $news_date, $news_id)
     {
         $base_url = "https://vdoplayer.teroasia.com/archiving/$folder/media/$news_date/$news_id";
@@ -195,22 +188,6 @@ class NewsController extends Controller
                 ->count()
         );
     }
-
-    private function sumNewsContent()
-    {
-        return cache()->remember('sumNewsContent', now()->addDay(), fn() => News::whereIn(News::NEWS_TYPE_ID, [1, 7])->where('publish_status', 1)->where('active', 1)->where('news.is_video_exist', 1)->sum('news_content_count'));
-    }
-
-    private function getTvProgram()
-    {
-        return cache()->remember('tvProgram', now()->addDay(), fn() => TvProgram::all());
-    }
-
-    private function getCategories()
-    {
-        return cache()->remember('category', now()->addDay(), fn() => TvCategory::all());
-    }
-
     private function sumNewsVideo(){
         return cache()->remember(
             'sumNewsVideo',

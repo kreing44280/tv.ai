@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\News;
 
 use App\Http\Controllers\Controller;
-use App\Models\NewsType;
 use App\Models\TeroNews;
-use App\Models\TvProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -46,15 +44,6 @@ class TeroNewsController extends Controller
         $item->news_pic = (!empty($image) && @get_headers($imagePath)[0] !== 'HTTP/1.1 404 Not Found')
             ? asset($imagePath)
             : asset('img/404.jpg');
-    }
-
-    private function getTvProgram()
-    {
-        return cache()->remember('tvProgram', now()->addDay(), fn() => TvProgram::all());
-    }
-
-    private function getNewsType() {
-        return cache()->remember('newsType', now()->addDay(), fn() => NewsType::all());
     }
 
     public function update(TeroNews $id)
@@ -125,8 +114,9 @@ class TeroNewsController extends Controller
 
         $tv_programs = $this->getTvProgram();
         $news_count = TeroNews::newsCount();
+        $news_width_videos = 0;
 
-        return view('pages.tero-news', compact('datas', 'tv_programs', 'news_count'));
+        return view('pages.tero-news', compact('datas', 'tv_programs', 'news_count', 'news_width_videos'));
     }
 
     public function show($id)
