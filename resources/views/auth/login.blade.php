@@ -10,7 +10,6 @@
                             <div class="card card-plain bg-gray-300">
                                 <div class="px-3 pt-3 text-start">
                                     <h4 class="font-weight-bolder">Sign In</h4>
-                                    <p class="mb-0">Enter your email and password to sign in</p>
                                 </div>
                                 <div class="card-body">
                                     <form role="form" method="POST" action="{{ route('login.perform') }}">

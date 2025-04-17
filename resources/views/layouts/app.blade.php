@@ -61,7 +61,6 @@
             <main class="main-content border-radius-lg">
                 @yield('content')
             </main>
-            @include('components.fixed-topup')
         @endif
     @endauth
 

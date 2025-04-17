@@ -3,8 +3,9 @@
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
-        <a class="navbar-brand m-0" href="{{ route('dashboard') }}">
-            <span class="ms-1 font-weight-bold">TMAI</span>
+        <a class="navbar-brand m-0 d-flex flex-column" href="{{ route('dashboard') }}">
+            <span class="ms-1 font-weight-bold">TMAI</span> 
+            <span class="ms-1">Hello, {{ Auth::user()->email }}</span>
         </a>
     </div>
     <hr class="horizontal dark mt-0">
@@ -59,7 +60,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link pl-6 {{ Route::currentRouteName() == 'tero_news' || Route::currentRouteName() == "tero-news-detail" || Route::currentRouteName() == "tero-news.search" ? 'active' : '' }}"
+                        <a class="nav-link pl-6 {{ Route::currentRouteName() == 'tero_news' || Route::currentRouteName() == 'tero-news-detail' || Route::currentRouteName() == 'tero-news.search' ? 'active' : '' }}"
                             href="{{ route('tero_news') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-newspaper mx-3" viewBox="0 0 16 16">
@@ -105,7 +106,9 @@
     </div>
     <script>
         const currentRouteName = `{{ Route::currentRouteName() }}`;
-        const isNewsRoute = ['news', 'tero_news', 'tero-news-detail', 'news-detail', 'news-create', 'tero-news.search', 'news.search'].includes(currentRouteName);
+        const isNewsRoute = ['news', 'tero_news', 'tero-news-detail', 'news-detail', 'news-create', 'tero-news.search',
+            'news.search'
+        ].includes(currentRouteName);
         const pagesDropdown = document.getElementById('pagesDropdown');
 
         if (isNewsRoute) {

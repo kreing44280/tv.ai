@@ -48,5 +48,4 @@
         </div>
     </div>
 </main>
-@include('layouts.footers.guest.footer')
 @endsection

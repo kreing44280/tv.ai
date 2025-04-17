@@ -1,7 +1,7 @@
 @extends('layouts.app', ['class' => 'g-sidenav-show bg-gray-100'])
 
 @section('content')
-@include('layouts.navbars.auth.topnav', ['title' => 'Your Profile'])
+@include('layouts.navbars.auth.topnav', ['title' => 'Your Profile', 'url' => route('profile')])
 <div class="card shadow-lg mx-4 card-profile-bottom">
     <div class="card-body p-3">
         <div class="row gx-4">
@@ -24,9 +24,6 @@
             </div>
         </div>
     </div>
-</div>
-<div id="alert">
-    @include('components.alert')
 </div>
 <div class="container-fluid py-4">
     <div class="row">
