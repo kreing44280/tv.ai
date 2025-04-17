@@ -57,6 +57,19 @@ class TeroNewsController extends Controller
         return cache()->remember('newsType', now()->addDay(), fn() => NewsType::all());
     }
 
+    public function update(TeroNews $id)
+    {
+        $data = request()->all();
+        dd($data);
+        // $id->update([
+        //     News::NEWS_TITLE => $data['news_title'] ?? $id->news_title,
+        //     News::NEWS_TRANSCRIPT => $data['news_transcript'] ?? $id->news_transcript,
+        //     News::NEWS_CONTENT => $data['news_content'] ?? $id->news_content
+        // ]);
+
+        return redirect()->route('tero-news-detail', $id->news_id);
+    }
+
     public function search()
     {
         // รับค่าจาก request

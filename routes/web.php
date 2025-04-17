@@ -32,6 +32,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/news/{id}/detail', [NewsController::class, 'show'])->name('news-detail');
     Route::get('/tero-news/{id}/detail', [TeroNewsController::class, 'show'])->name('tero-news-detail');
     Route::post('/news/{id}/update', [NewsController::class, 'update'])->name('news.update');
+    Route::post('/news-tero/{id}/update', [TeroNewsController::class, 'update'])->name('news-tero.update');
     Route::get('/members/{user_id}/show', [UserController::class, 'show']);
     Route::post('/upload-image', [TeroNewsController::class, 'uploadImage']);
 });

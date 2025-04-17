@@ -12,7 +12,7 @@
                     </div>
                     <div class="card-body overflow-auto pb-0">
                         <form action="{{ route('news.update', ['id' => $datas->news->news_id]) }}" method="post"
-                            class="needs-validation" novalidate>
+                            class="needs-validation" novalidate enctype="multipart/form-data" id="newsForm">
                             @csrf
                             <div class="row g-3">
                                 <div class="col-12">
@@ -77,9 +77,11 @@
                                             rows="20">{{ $datas->news->news_content_ai }}</textarea>
                                     </div>
                                     <div class="mb-3">
-                                        <button type="button" class="btn btn-primary" id="copyTextAI">Copy text
+                                        <button type="button" class="btn btn-primary" id="copyTextAI" 
+                                            onclick="copyTextAIFunc()">Copy text
                                             AI</button>
-                                        <span class="btn btn-danger" id="copyTextAICancel">Cancel</span><br>
+                                        <span class="btn btn-danger" id="copyTextAICancel" 
+                                        onclick="copyTextAICancelFunc(`{{ $datas->news->news_title }}`, `{{ $datas->news->news_content }}`)">Cancel</span><br>
                                         <u class="text-danger text-sm">เมื่อกด Copy ข้อมูลจะไปแสดงที่ข้างล้าง !</u>
                                     </div>
                                     <div class="mb-3">
@@ -92,9 +94,9 @@
                                         <label for="news_content" class="form-label">News Content</label>
                                         <div id="news_content" class="ql-editor bg-white" style="height: 500px;">
                                             {{ $datas->news->news_content }}</div>
-                                    </div>                                    
+                                    </div>
                                 </div>
-                                <div class="col-12">                                  
+                                <div class="col-12">
                                     <div class="row g-3">
                                         <div class="col-12 col-md-6">
                                             <video controls class="w-100 h-100">
@@ -181,86 +183,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        var quill = new Quill('#news_content', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{
-                        'size': ['small', false, 'large', 'huge']
-                    }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{
-                        'header': 1
-                    }, {
-                        'header': 2
-                    }],
-                    [{
-                        'list': 'ordered'
-                    }, {
-                        'list': 'bullet'
-                    }],
-                    [{
-                        'align': []
-                    }],
-                    ['link', 'image', 'video'],
-                    ['clean'],
-                    [{
-                        'color': []
-                    }, {
-                        'background': []
-                    }],
-                ]
-            }
-        });
-
-        quill.getModule('toolbar').addHandler('image', () => {
-            const input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.click();
-
-            input.onchange = () => {
-                const file = input.files[0];
-                const formData = new FormData();
-                formData.append('image', file);
-
-                fetch('/upload-image', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-Token': '{{ csrf_token() }}'
-                        }
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        }
-                        throw new Error('Network response was not ok.');
-                    })
-                    .then(data => {
-                        const range = quill.getSelection();
-                        quill.insertEmbed(range.index, 'image', `${data.url}`);
-                    })
-                    .catch(error => console.log(error));
-            }
-        });
-
-
-        $('#copyTextAI').click(function() {
-            const news_title_ai = $('#news_title_ai').val();
-            const news_content_ai = $('#news_content_ai').val();
-            if (news_title_ai == '' || news_content_ai == '') {
-                alert('กรุณากรอกข้อมูลให้ครบ');
-                return false;
-            }
-            $('#news_title').val(news_title_ai);
-            $('#news_content').val(news_content_ai);
-        });
-
-        $('#copyTextAICancel').click(function() {
-            $('#news_title').val(`{{ $datas->news->news_title }}`);
-            $('#news_content').val(`{{ $datas->news->news_content }}`);
-        });
-    </script>
 @endsection
