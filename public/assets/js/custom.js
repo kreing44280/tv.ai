@@ -1,35 +1,32 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('fixed-topup').addEventListener('click', function () {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    const fixedTopup = document.getElementById('fixed-topup');
+    if (fixedTopup) {
+        fixedTopup.addEventListener('click', function () {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
-    });
+    }
 });
 
+// Tag input
 const tagInput = document.getElementById('tagInput');
 const tagInputField = document.getElementById('tagInputField');
 const hiddenInput = document.getElementById('news_tags');
 const initialTags = hiddenInput ? hiddenInput.value.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
 
-// Populate initial tags
-initialTags.forEach(addTag);
-
-// Function to add a tag
 function addTag(tag) {
     tag = tag.trim();
     if (!tag) return;
 
-    // Avoid duplicates
     const existingTags = Array.from(tagInput.querySelectorAll('.tag')).map(t => t.textContent.trim());
     if (existingTags.includes(tag)) return;
 
-    // Create tag element
     const tagElement = document.createElement('div');
     tagElement.classList.add('tag');
     tagElement.textContent = tag;
 
-    // Add close button
     const closeButton = document.createElement('span');
     closeButton.classList.add('tag-close');
     closeButton.textContent = '×';
@@ -44,13 +41,11 @@ function addTag(tag) {
     updateHiddenInput();
 }
 
-// Update the hidden input value
 function updateHiddenInput() {
     const tags = Array.from(tagInput.querySelectorAll('.tag')).map(t => t.textContent.trim());
     hiddenInput.value = tags.join(',');
 }
 
-// Handle input field events
 if (tagInputField) {
     tagInputField.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ',') {
@@ -59,6 +54,7 @@ if (tagInputField) {
             tagInputField.value = '';
         }
     });
+
     tagInputField.addEventListener('blur', () => {
         if (tagInputField.value.trim()) {
             addTag(tagInputField.value);
@@ -67,71 +63,9 @@ if (tagInputField) {
     });
 }
 
+initialTags.forEach(addTag);
 
-// if (document.getElementById('tagInputHuman')) {
-const tagInputHuman = document.getElementById('tagInputHuman');
-const tagInputFieldHuman = document.getElementById('tagInputFieldHuman');
-const hiddenInputHuman = document.getElementById('news_tag_human');
-const initialTagsHuman = hiddenInputHuman ? hiddenInputHuman.value.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
-
-// Populate initial tags
-initialTagsHuman.forEach(addTagHuman);
-
-// Function to add a tag
-function addTagHuman(tag) {
-    tag = tag.trim();
-    if (!tag) return;
-
-    // Avoid duplicates
-    const existingTags = Array.from(tagInputHuman.querySelectorAll('.tag')).map(t => t.textContent.trim());
-    if (existingTags.includes(tag)) return;
-
-    // Create tag element
-    const tagElement = document.createElement('div');
-    tagElement.classList.add('tag');
-    tagElement.textContent = tag;
-
-    // Add close button
-    const closeButton = document.createElement('span');
-    closeButton.classList.add('tag-close');
-    closeButton.textContent = '×';
-    closeButton.onclick = () => {
-        tagElement.remove();
-        updateHiddenInputHuman();
-    };
-
-    tagElement.appendChild(closeButton);
-    tagInputHuman.insertBefore(tagElement, tagInputFieldHuman);
-
-    updateHiddenInputHuman();
-}
-
-// Update the hidden input value
-function updateHiddenInputHuman() {
-    const tags = Array.from(tagInputHuman.querySelectorAll('.tag')).map(t => t.textContent.trim());
-    hiddenInputHuman.value = tags.join(',');
-}
-
-// Handle input field events
-if (tagInputFieldHuman) {
-    tagInputFieldHuman.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ',') {
-            e.preventDefault();
-            addTagHuman(tagInputFieldHuman.value);
-            tagInputFieldHuman.value = '';
-        }
-    });
-
-    // Prevent empty tags on blur
-    tagInputFieldHuman.addEventListener('blur', () => {
-        if (tagInputFieldHuman.value.trim()) {
-            addTagHuman(tagInputFieldHuman.value);
-            tagInputFieldHuman.value = '';
-        }
-    });
-}
-// }
-
+// Datepicker
 $('#startDate').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
@@ -148,6 +82,7 @@ $('#endDate').datepicker({
     height: 'auto'
 });
 
+// Quill editor
 var quillContainer = document.querySelector('#news_content');
 if (quillContainer) {
     var quill = new Quill(quillContainer, {
@@ -214,7 +149,7 @@ if (quillContainer) {
     });
 }
 
-
+// Copy text AI
 function copyTextAIFunc() {
     const news_title_ai = $('#news_title_ai').val();
     const news_content_ai = $('#news_content_ai').val();
@@ -234,6 +169,7 @@ function copyTextAICancelFunc (news_title, news_content) {
     $('#news_content').val(news_content);
 }
 
+// Submit form
 $("#newsForm").submit(function(e) {
     e.preventDefault();
     Swal.fire({
@@ -253,3 +189,4 @@ $("#newsForm").submit(function(e) {
         }
     });
 });
+

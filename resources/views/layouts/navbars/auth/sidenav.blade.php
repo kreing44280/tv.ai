@@ -5,7 +5,7 @@
             aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0 d-flex flex-column" href="{{ route('dashboard') }}">
             <span class="ms-1 font-weight-bold">TMAI</span> 
-            <span class="ms-1">Hello, {{ Auth::user()->email }}</span>
+            <span class="ms-2 text-xs">Hello, {{ Auth::user()->email }}</span>
         </a>
     </div>
     <hr class="horizontal dark mt-0">

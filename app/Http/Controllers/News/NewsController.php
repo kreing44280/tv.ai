@@ -122,7 +122,7 @@ class NewsController extends Controller
 
         $item->news_pic = (!empty($image) && @get_headers($imagePath)[0] !== 'HTTP/1.1 404 Not Found')
             ? asset($imagePath)
-            : asset('https://cdn4.vectorstock.com/i/1000x1000/55/63/error-404-file-not-found-web-icon-vector-21745563.jpg');
+            : asset('img/404.jpg');
     }
 
     public function show($id)
