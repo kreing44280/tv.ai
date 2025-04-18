@@ -16,18 +16,22 @@ class TeroNewsController extends Controller
     public function index()
     {
         $datas = cache()->remember('teroNewsPaginated_' . request('page', 1), now()->addDay(), function () {
-            return TeroNews::selectRaw('news_tero.news_id, news_tero.news_title, news_tero.news_date, news_tero.news_permalink,
+            $new = TeroNews::selectRaw('news_tero.news_id, news_tero.news_title, news_tero.news_date, news_tero.news_permalink,
                 news_tero.news_pic, news_tero.news_type_id, news_tero.program_id, news_tero.news_line_category')
                 ->with('tvProgram', 'newsType')
                 ->where('news_tero.publish_status', 1)
                 ->where('news_tero.active', 1)
                 ->whereIn('news_tero.news_type_id', [1, 7])
-                ->paginate(32);
-        });
-        $datas->each(function ($item) {
-            $this->setPicture($item);
-        });
+                ->paginate(12);
 
+            $new->each(function ($item) {
+                $this->setPicture($item);
+            });
+
+            return $new;
+
+        });
+        
         $news_count = TeroNews::newsCount();
         $news_width_videos = 0;
         // $news_width_videos = TeroNews::sumNewsVideo();
@@ -85,11 +89,10 @@ class TeroNewsController extends Controller
         news_pic, program_id')
             ->with('tvProgram', 'newsType')
             ->where(function ($query) use ($filteredParams) {
-                if (isset($filteredParams['newsName'])) {
-                    $query->where(function ($q) use ($filteredParams) {
-                        $q->where('news_id', $filteredParams['newsName'])
-                            ->orWhere('news_title', 'like', '%' . $filteredParams['newsName'] . '%');
-                    });
+                if (isset($filteredParams['newsName']) && is_numeric($filteredParams['newsName'])) {
+                    $query->where('news_id', $filteredParams['newsName']);
+                } elseif (isset($filteredParams['newsName'])) {
+                    $query->where('news_title', 'like', '%' . $filteredParams['newsName'] . '%');
                 }
             });
 
@@ -105,7 +108,7 @@ class TeroNewsController extends Controller
         $datas->where('publish_status', 1);
         $datas->where('active', 1);
 
-        $datas = $datas->paginate(32)->appends(request()->query());
+        $datas = $datas->paginate(12)->appends(request()->query());
 
 
         $datas->each(function ($item) {

@@ -12,17 +12,25 @@ class NewsController extends Controller
     public function index()
     {
         $datas = cache()->remember('news_data_page_' . request('page', 1), now()->addDay(), function () {
-            return News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
+            $new = News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
             category.category_name, news.news_pic, news.news_type_id, news.program_id,
-            TIME_FORMAT(SEC_TO_TIME(news.news_duration), "%H:%i:%s") as video_duration')
+            news.news_duration as video_duration')
                 ->with('tvProgram', 'newsType')
                 ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
                 ->join('category', 'news_category.category_id', '=', 'category.category_id')
-                ->where('news.publish_status', 1)
-                ->where('news.active', 1)
-                ->where('news.is_video_exist', 1)
+                ->where([
+                    ['news.publish_status', '=', 1],
+                    ['news.active', '=', 1],
+                    ['news.is_video_exist', '=', 1],
+                ])
                 ->whereIn('news.news_type_id', [1, 7])
-                ->paginate(32);
+                ->paginate(12);
+            $new->each(function ($item) {
+                $item->video_duration = date('Y-m-d', strtotime($item->video_duration));
+                $this->setPicture($item);
+            });
+
+            return $new;
         });
 
         $tv_programs = $this->getTvProgram();
@@ -30,11 +38,6 @@ class NewsController extends Controller
         $news_count = $this->newsCount();
         $videoDuration = $this->videoDuration();
         $news_width_videos = $this->sumNewsVideo();
-
-        // Apply the setPicture logic
-        $datas->each(function ($item) {
-            $this->setPicture($item);
-        });
 
         return view('pages.news', compact('datas', 'tv_programs', 'categories', 'news_count', 'videoDuration', 'news_width_videos'));
     }
@@ -64,12 +67,14 @@ class NewsController extends Controller
         // ถ้า URL ถูกต้องแล้ว ให้ดำเนินการค้นหาต่อ
         $datas = News::selectRaw('news.news_id, news.news_title, news.news_date, news.news_permalink,
         category.category_name, news.news_pic, news.news_type_id, news.program_id,
-        TIME_FORMAT(SEC_TO_TIME(news.news_duration), "%H:%i:%s") as video_duration')
+        news.news_duration as video_duration')
             ->with('tvProgram', 'newsType')
             ->join('news_category', 'news.news_id', '=', 'news_category.news_id')
             ->join('category', 'news_category.category_id', '=', 'category.category_id')
             ->where(function ($query) use ($filteredParams) {
-                if (isset($filteredParams['newsName'])) {
+                if (isset($filteredParams['newsName']) && is_numeric($filteredParams['newsName'])) {
+                    $query->where('news.news_id', $filteredParams['newsName']);
+                } elseif (isset($filteredParams['newsName'])) {
                     $query->where(function ($q) use ($filteredParams) {
                         $q->where('news.news_id', $filteredParams['newsName'])
                             ->orWhere('news_title', 'like', '%' . $filteredParams['newsName'] . '%');
@@ -94,10 +99,11 @@ class NewsController extends Controller
         $datas->where('news.is_video_exist', 1);
         $datas->where('news.active', 1);
 
-        $datas = $datas->paginate(32)->appends(request()->query());
+        $datas = $datas->paginate(12)->appends(request()->query());
 
 
         $datas->each(function ($item) {
+            $item->video_duration = date('Y-m-d', strtotime($item->video_duration));
             $this->setPicture($item);
         });
 
